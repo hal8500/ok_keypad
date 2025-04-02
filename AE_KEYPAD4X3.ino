@@ -82,6 +82,51 @@ int AE_KEYPAD4X3_getKey(void) {
 }
 
 //----------------------------------------------------//
+// 押されたキーを検出し、数字を返します。
+//----------------------------------------------------//
+int AE_KEYPAD4X3_getKeys(void) {
+  int res = 0;
+  digitalWrite(_KEY_X, 0);
+  digitalWrite(_KEY_Y, 1);
+  digitalWrite(_KEY_Z, 1);
+  if (digitalRead(_KEY_A) == 0)
+    res |= (1 << 10);
+  if (digitalRead(_KEY_B) == 0)
+    res |= (1 << 7);
+  if (digitalRead(_KEY_C) == 0)
+    res |= (1 << 4);
+  if (digitalRead(_KEY_D) == 0)
+    res |= (1 << 1);
+
+  digitalWrite(_KEY_X, 1);
+  digitalWrite(_KEY_Y, 0);
+  digitalWrite(_KEY_Z, 1);
+  if (digitalRead(_KEY_A) == 0)
+    res |= (1 << 11);
+  if (digitalRead(_KEY_B) == 0)
+    res |= (1 << 8);
+  if (digitalRead(_KEY_C) == 0)
+    res |= (1 << 5);
+  if (digitalRead(_KEY_D) == 0)
+    res |= (1 << 2);
+
+  
+  digitalWrite(_KEY_X, 1);
+  digitalWrite(_KEY_Y, 1);
+  digitalWrite(_KEY_Z, 0);
+  if (digitalRead(_KEY_A) == 0)
+    res |= (1 << 12);
+  if (digitalRead(_KEY_B) == 0)
+    res |= (1 << 9);
+  if (digitalRead(_KEY_C) == 0)
+    res |= (1 << 6);
+  if (digitalRead(_KEY_D) == 0)
+    res |= (1 << 3);
+
+  return res;
+}
+
+//----------------------------------------------------//
 // 押されたキーを検出し、一文字を返します。
 //----------------------------------------------------//
 char AE_KEYPAD4X3_getKeyChar(void) {

@@ -1,7 +1,6 @@
 #include <Mouse.h>
 #include <Arduino.h>
 
-
 #define _POWER_LED 25
 #define _ACT_LED 2
 
@@ -27,18 +26,19 @@ void setup() {
 void loop() {
   int key;
 
-  key = AE_KEYPAD4X3_getKey();  //押されたキーを文字で出力する 例 '1'や'#'など
+  key = AE_KEYPAD4X3_getKeys();  //押されたキーを文字で出力する 例 '1'や'#'など
 
   if (key != 0) {
-    digitalWrite(_ACT_LED, 1);
-    Serial.print(key);
+    //digitalWrite(_ACT_LED, 1);
+    Serial.println(key);
 
-    MACRO_Switch(key);
-    delay(1000);
-    digitalWrite(_ACT_LED, 0);
+    //MACRO_Switch(key);
+
+    //delay(1000);
+    //digitalWrite(_ACT_LED, 0);
   }
 
-  delay(100);
+  delay(10);
 }
 
 

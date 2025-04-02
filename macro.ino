@@ -158,6 +158,9 @@ void MACRO_Switch(int code) {
     case 6:
       MACRO_download_adobe_reader();
       break;
+    case 7:
+      MACRO_winget_adobe_reader();
+      break;
     default:
       break;
   }
@@ -194,7 +197,7 @@ void MACRO_open_download() {
   Keyboard.println("%userprofile%/downloads");
 }
 
-void MACRO_open_chrome(String url) {
+void open_chrome(String url) {
   Keyboard.press(KEY_LEFT_GUI);
   Keyboard.releaseAll();
   delay(500);
@@ -206,7 +209,7 @@ void MACRO_open_chrome(String url) {
   delay(2000);
 }
 
-void MACRO_open_secret_chrome(String url) {
+void open_secret_chrome(String url) {
   Keyboard.press(KEY_LEFT_GUI);
   Keyboard.releaseAll();
   delay(500);
@@ -220,7 +223,7 @@ void MACRO_open_secret_chrome(String url) {
   delay(2000);
 }
 
-void MACRO_nav_papas_download_teamview() {
+void nav_papas_download_teamview() {
   Keyboard.write(KEY_TAB);
   delay(100);
   Keyboard.write(KEY_TAB);
@@ -245,15 +248,29 @@ void MACRO_nav_download_adobe_reader() {
 }
 
 void MACRO_open_papas() {
-  MACRO_open_chrome("https://papas.jp");
+  open_chrome("https://papas.jp");
 }
 
 void MACRO_download_secret_teamview() {
-  MACRO_open_secret_chrome("https://papas.jp");
-  MACRO_nav_papas_download_teamview();
+  open_secret_chrome("https://papas.jp");
+  nav_papas_download_teamview();
 }
 
 void MACRO_download_adobe_reader() {
-  MACRO_open_chrome("https://get.adobe.com/jp/reader/");
+  open_chrome("https://get.adobe.com/jp/reader/");
   MACRO_nav_download_adobe_reader();
+}
+
+void open_cmd() {
+  Keyboard.press(KEY_LEFT_GUI);
+  Keyboard.press('r');
+  Keyboard.releaseAll();
+  delay(500);
+  Keyboard.println("cmd");
+}
+
+void MACRO_winget_adobe_reader() {
+  open_cmd();
+  delay(500);
+  Keyboard.println("winget install Adobe.Acrobat.Reader.64-bit --override \"/sPB /rs /rps /msi EULA_ACCEPT=YES ENABLE_OPTIMIZATION=1 DISABLEDESKTOPSHORTCUT=1\"");
 }
