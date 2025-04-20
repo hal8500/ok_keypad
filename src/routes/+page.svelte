@@ -1,22 +1,21 @@
 <script lang="ts">
   import { OkSerial, type SlotList } from "$lib/ok_serial.svelte";
+  import SlotListView from "./SlotListView.svelte";
 
   const ok = new OkSerial();
   ok.reloadPorts();
 
-  let slotList: SlotList | null = $state(null);
-
   async function connect(port: SerialPort) {
     try {
       await ok.openPort(port);
-      slotList = await ok.getList();
+      await ok.requestList();
     } catch (e) {
       console.error(e);
     }
   }
 </script>
 
-<h1>Welcome to SvelteKit</h1>
+<h1>OkeyPad configurator</h1>
 <hr />
 <div>
   <h2>ports</h2>
@@ -39,8 +38,10 @@
   <button onclick={() => ok.requestPort()}>request</button>
 </div>
 <hr />
-{#if slotList && ok.currentPort}
-  <pre><code>{JSON.stringify(slotList)}</code></pre>
+
+{#if ok.slots}
+  <SlotListView slotlist={ok.slots} />
 {/if}
 
 <pre><code>{ok.message}</code></pre>
+<pre><code>{JSON.stringify(ok.slots)}</code></pre>

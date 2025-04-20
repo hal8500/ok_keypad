@@ -1,21 +1,72 @@
-export type MacroCommand = {
-  name: string;
-  acts: [
-    {
-      type: "print" | "press" | "release" | "releaseAll" | "delay" | "move";
-      arg: number | undefined;
-      x: number | undefined;
-      y: number | undefined;
-    }
-  ];
+export type Action = {
+  type:
+    | "print"
+    | "press"
+    | "release"
+    | "releaseAll"
+    | "delay"
+    | "move"
+    | "click";
+  arg?: string | number;
+  x?: number;
+  y?: number;
 };
+
+export type MacroCommand = {
+  name?: string;
+  acts: Action[];
+};
+
 export type SlotCommand = string | MacroCommand;
 export type SlotList = SlotCommand[];
+
+class LineBreakTransformer implements Transformer<string, string> {
+  chunks: string;
+
+  constructor() {
+    this.chunks = "";
+  }
+
+  transform(chunk: string, controller: TransformStreamDefaultController) {
+    this.chunks += chunk;
+    const lines = this.chunks.split("\r\n");
+    this.chunks = lines.pop() ?? "";
+    lines.forEach((line) => controller.enqueue(line));
+  }
+
+  flush(controller: TransformStreamDefaultController) {
+    controller.enqueue(this.chunks);
+  }
+}
+
+const SLOTS_DEFAULT: SlotList = [
+  "n => \n nn => \\n",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  {
+    name: "macro",
+    acts: [
+      { type: "press", arg: 114 },
+      { type: "delay", arg: 1000 },
+      { type: "releaseAll" },
+      { type: "print", arg: "mcr" },
+    ],
+  },
+];
 
 export class OkSerial {
   ports: SerialPort[] = $state([]);
   currentPort: SerialPort | null = $state(null);
   message: string = $state("");
+  slots: SlotList = $state(SLOTS_DEFAULT);
+  writer: WritableStreamDefaultWriter<string> | null = null;
+
+  closer: (() => Promise<void>) | null = null;
 
   async reloadPorts() {
     if (!navigator.serial) return;
@@ -41,78 +92,82 @@ export class OkSerial {
     } catch (e) {
       console.log(e);
       this.message = "failed to connect serial port";
+      return;
     }
-  }
-
-  async close() {
-    if (this.currentPort == null) return;
-    try {
-      await this.currentPort.close();
-    } catch (e) {
-      console.log(e);
-    }
-    this.currentPort = null;
-  }
-
-  async fetch(text: string): Promise<string | null> {
-    if (this.currentPort === null) return null;
 
     const textDecoder = new TextDecoderStream();
     const readableStreamClosed = this.currentPort.readable.pipeTo(
       textDecoder.writable
     );
-    const reader = textDecoder.readable.getReader();
+    const reader = textDecoder.readable
+      .pipeThrough(new TransformStream(new LineBreakTransformer()))
+      .getReader();
+
+    (async () => {
+      while (true) {
+        const { value, done } = await reader.read();
+        if (value) {
+          this.onRecieve(value);
+        }
+        if (done) {
+          reader.releaseLock();
+          break;
+        }
+      }
+    })();
 
     const textEncoder = new TextEncoderStream();
     const writableStreamClosed = textEncoder.readable.pipeTo(
       this.currentPort.writable
     );
-    const writer = textEncoder.writable.getWriter();
-    await writer.write(text);
-    writer.releaseLock();
+    this.writer = textEncoder.writable.getWriter();
 
-    const readUntilClosed = async () => {
-      let res = "";
-      let i = 0;
-      while (true) {
-        const response = await reader.read();
-        console.log(`read[${i++}] = ${response.value}`);
-        if (response.value) {
-          res += response.value;
-        }
-        if (response.done) {
-          break;
-        }
-      }
-      reader.releaseLock();
-      await this.close();
-      return res;
+    this.closer = async () => {
+      reader.cancel();
+      await readableStreamClosed.catch(() => {
+        /* Ignore the error */
+      });
+
+      this.writer?.close();
+      await writableStreamClosed;
+
+      await port.close();
     };
+  }
 
-    const readtask = readUntilClosed();
-    await delay(100);
+  async close() {
+    if (this.currentPort == null || this.closer == null) return;
     try {
-      await reader.cancel();
+      await this.closer();
     } catch (e) {
       console.log(e);
     }
-
-    return await readtask;
+    this.currentPort = null;
+    this.writer = null;
+    this.closer = null;
   }
 
-  async getList(): Promise<SlotList | null> {
+  async onRecieve(line: string) {
+    try {
+      const j = JSON.parse(line);
+      if (j.length == 9) {
+        this.slots = j;
+      }
+    } catch (e) {
+      console.log("failed to parse");
+      console.log(e);
+    }
+  }
+
+  async send(text: string) {
+    if (this.writer === null) return null;
+    await this.writer.write(text);
+  }
+
+  async requestList() {
     if (this.currentPort === null) return null;
     this.message = "reading list";
-
-    const r = await this.fetch("list_json\n");
-
-    if (r) {
-      console.log(r);
-      let j = r.slice(r.indexOf("\n"));
-      const slotlist = JSON.parse(j) as SlotList;
-      return slotlist;
-    }
-    return null;
+    const r = await this.send("list_json\n");
   }
 }
 
