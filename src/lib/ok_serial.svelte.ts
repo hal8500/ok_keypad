@@ -40,8 +40,8 @@ class LineBreakTransformer implements Transformer<string, string> {
 }
 
 const SLOTS_DEFAULT: SlotList = [
-  "n => \n nn => \\n",
-  "2",
+  "aiueo",
+  "test@example.com",
   "3",
   "4",
   "5",
@@ -86,7 +86,7 @@ export class OkSerial {
   ports: SerialPort[] = $state([]);
   currentPort: SerialPort | null = $state(null);
   message: string = $state("");
-  slots: SlotList | null = $state(null);
+  slots: SlotList | null = $state(SLOTS_DEFAULT);
   writer: WritableStreamDefaultWriter<string> | null = null;
 
   closer: (() => Promise<void>) | null = null;
