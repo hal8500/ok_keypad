@@ -3,24 +3,41 @@
 // AE_KEYPAD4X3   ------   Arduino UNO    //
 //                                        //
 //   |>        <------       3.3V         //
-//   X         ------>       GP17         //
-//   Y         ------>       GP18         //
-//   Z         ------>       GP19         //
-//   A         <------       GP20         //
-//   B         <------       GP21         //
-//   C         <------       GP22         //
-//   D         <------       GP26         //
+//   X         ------>       GP17 | GP21  //
+//   Y         ------>       GP18 | GP22  //
+//   Z         ------>       GP19 | GP23  //
+//   A         <------       GP20 | GP24  //
+//   B         <------       GP21 | GP25  //
+//   C         <------       GP22 | GP26  //
+//   D         <------       GP26 | GP27  //
 //----------------------------------------//
 
+#define V2
+
+#ifdef V1
 
 // KEYPAD用のピン記述
-#define _KEY_X 17
-#define _KEY_Y 18
-#define _KEY_Z 19
-#define _KEY_A 20
-#define _KEY_B 21
-#define _KEY_C 22
-#define _KEY_D 26
+const byte _KEY_X = 17;
+const byte _KEY_Y = 18;
+const byte _KEY_Z = 19;
+const byte _KEY_A = 20;
+const byte _KEY_B = 21;
+const byte _KEY_C = 22;
+const byte _KEY_D = 26;
+
+#else
+
+// KEYPAD用のピン記述
+const byte _KEY_X = 21;
+const byte _KEY_Y = 22;
+const byte _KEY_Z = 23;
+const byte _KEY_A = 24;
+const byte _KEY_B = 25;
+const byte _KEY_C = 26;
+const byte _KEY_D = 27;
+
+#endif
+
 
 const byte ROWS = 4;  //four rows
 const byte COLS = 3;  //three columns
