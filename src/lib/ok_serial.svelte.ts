@@ -59,11 +59,34 @@ const SLOTS_DEFAULT: SlotList = [
   },
 ];
 
+function isSlotList(json: any) : json is SlotList{
+  if (!("length" in json)) {
+    return false;
+  }
+  if (json.length != 9) {
+    return false;
+  }
+  for (const s of json) {
+    if (typeof (s) == "string") {
+      continue;
+    }
+    if (!("acts" in s) || !("length" in s.acts)) {
+      return false;
+    }
+    for (const a of s.acts) {
+      if (typeof(s) != "string") {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 export class OkSerial {
   ports: SerialPort[] = $state([]);
   currentPort: SerialPort | null = $state(null);
   message: string = $state("");
-  slots: SlotList = $state(SLOTS_DEFAULT);
+  slots: SlotList | null = $state(null);
   writer: WritableStreamDefaultWriter<string> | null = null;
 
   closer: (() => Promise<void>) | null = null;
@@ -150,7 +173,7 @@ export class OkSerial {
   async onRecieve(line: string) {
     try {
       const j = JSON.parse(line);
-      if (j.length == 9) {
+      if (isSlotList(j)) {
         this.slots = j;
       }
     } catch (e) {
