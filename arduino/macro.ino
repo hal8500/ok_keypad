@@ -1,35 +1,37 @@
-
 void MACRO_Init() {
   Keyboard.begin(KeyboardLayout_ja_JP);
   Mouse.begin();
 }
 
-void MACRO_Switch(int code) {
-  switch (code) {
-    case 1:
-      MACRO_hello();
-      break;
-    case 2:
-      MACRO_move_cursor();
-      break;
-    case 3:
-      MACRO_open_download();
-      break;
-    case 4:
-      MACRO_open_papas();
-      break;
-    case 5:
-      MACRO_download_secret_teamview();
-      break;
-    case 6:
-      MACRO_download_adobe_reader();
-      break;
-    case 7:
-      MACRO_winget_adobe_reader();
-      break;
-    default:
-      break;
+// キャンセル可能なdelay機能
+// msミリ秒後にfalseを返す
+// それまでの間に*キーを押した場合は即座にtrueを返す
+// 使用例
+// if (pause(1000)) { Serial.println("中断されました"); return; }
+bool pause(int ms) {
+  unsigned long start = millis();
+  while (true) {
+    char key = keypad.getKey();
+    if (key == '*') return true;
+    unsigned long elapsed = millis() - start;
+    if (ms < elapsed) return false;
   }
+}
+
+void test_macro() {
+  Keyboard.println();
+  Keyboard.press(KEY_DOWN_ARROW);
+  pause(1000);
+  Keyboard.releaseAll();
+  Keyboard.println("okm");
+  Keyboard.print("\t");
+  
+  Keyboard.press(KEY_DOWN_ARROW);
+  Keyboard.releaseAll();
+  Keyboard.press(KEY_DOWN_ARROW);
+  Keyboard.releaseAll();
+  Keyboard.print("\t");
+  Keyboard.print("aieueoe");
 }
 
 void MACRO_hello() {
@@ -37,19 +39,19 @@ void MACRO_hello() {
 }
 
 void MACRO_move_cursor() {
-  for (int i = 0; i < 10; i ++) {
+  for (int i = 0; i < 10; i++) {
     Mouse.move(10, 0, 0);
     delay(100);
   }
-  for (int i = 0; i < 10; i ++) {
+  for (int i = 0; i < 10; i++) {
     Mouse.move(0, 10, 0);
     delay(100);
   }
-  for (int i = 0; i < 10; i ++) {
+  for (int i = 0; i < 10; i++) {
     Mouse.move(-10, 0, 0);
     delay(100);
   }
-  for (int i = 0; i < 10; i ++) {
+  for (int i = 0; i < 10; i++) {
     Mouse.move(0, -10, 0);
     delay(100);
   }
@@ -89,16 +91,6 @@ void open_secret_chrome(String url) {
   delay(2000);
 }
 
-void nav_papas_download_teamview() {
-  Keyboard.write(KEY_TAB);
-  delay(100);
-  Keyboard.write(KEY_TAB);
-  delay(100);
-  Keyboard.write(KEY_TAB);
-  delay(100);
-  Keyboard.write(KEY_RETURN);
-}
-
 void MACRO_nav_download_adobe_reader() {
   Keyboard.write(KEY_TAB);
   delay(100);
@@ -111,15 +103,6 @@ void MACRO_nav_download_adobe_reader() {
   Keyboard.write(KEY_TAB);
   delay(100);
   Keyboard.write(KEY_RETURN);
-}
-
-void MACRO_open_papas() {
-  open_chrome("https://papas.jp");
-}
-
-void MACRO_download_secret_teamview() {
-  open_secret_chrome("https://papas.jp");
-  nav_papas_download_teamview();
 }
 
 void MACRO_download_adobe_reader() {
