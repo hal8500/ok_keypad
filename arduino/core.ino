@@ -5,10 +5,75 @@ const String FILE_PATH = "/j.json";
 /*
 items = [
   "text",
-  {name: string, acts:[ {type:"print"|"press"|"release"|"releaseAll"|"delay"|"move", arg:int, x:int, y|int} ]},
+  {name: string, acts:[ {type:"print"|"press(ID)?"|"release(ID)?"|"write(ID)?"|"releaseAll"|"delay"|"move", arg:int|string, x:int, y|int} ]},
 ]
 
+# pressとpressIDの違い 
+pressはcharとして出力する。pressIDはUSB HID Usage IDとして出力する？
+
+https://bsakatu.net/doc/usb-hid-to-scancode/
 */
+
+const String DEFAULT_ITEMS_JSON = R"(
+  [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    {
+        "name": "chrome setup",
+        "acts": [
+            {
+                "type": "print",
+                "arg": "\t"
+            },
+            {
+                "type": "pressID",
+                "arg": 81
+            },
+            {
+                "type": "delay",
+                "arg": 1500
+            },
+            {
+                "type": "releaseAll"
+            },
+            {
+                "type": "print",
+                "arg": " "
+            },
+            {
+                "type": "delay",
+                "arg": 500
+            },
+            {
+                "type": "print",
+                "arg": "aaaaaa"
+            },
+            {
+                "type": "print",
+                "arg": "\t"
+            },
+            {
+                "type": "print",
+                "arg": "p"
+            },
+            {
+                "type": "print",
+                "arg": "\t"
+            },
+            {
+                "type": "print",
+                "arg": "password"
+            }
+        ]
+    }
+]
+)";
 
 class Okeypad {
 private:
@@ -21,7 +86,7 @@ private:
   void save();
   void help();
 
-  String validateJsonVar(JSONVar& j);
+  String validateJsonVar(JSONVar &j);
 
 public:
   bool debug;
@@ -37,20 +102,7 @@ void Okeypad::init() {
   isFileLoaded = false;
   debug = false;
 
-  for (int i = 0; i < NUM_ITEMS - 1; i++) {
-    items[i] = String(i + 1);
-  }
-
-  JSONVar last = items[NUM_ITEMS - 1];
-
-  last["name"] = "macro";
-  last["acts"][0]["type"] = "press";
-  last["acts"][0]["arg"] = 'r';
-  last["acts"][1]["type"] = "delay";
-  last["acts"][1]["arg"] = 1000;
-  last["acts"][2]["type"] = "releaseAll";
-  last["acts"][3]["type"] = "print";
-  last["acts"][3]["arg"] = "mcr";
+  items = JSON.parse(DEFAULT_ITEMS_JSON);
 }
 
 void Okeypad::handle(String &command) {
@@ -69,6 +121,7 @@ void Okeypad::handle(String &command) {
     load();
   } else if (command == "init") {
     init();
+    save();
   } else if (command == "help") {
     help();
   }
@@ -114,7 +167,7 @@ void Okeypad::setJson(String &command) {
   Serial.println(res);
 }
 
-String Okeypad::validateJsonVar(JSONVar& j) {
+String Okeypad::validateJsonVar(JSONVar &j) {
   if (JSON.typeof(j) != "array") {
     return "The root must be an array.";
   }
@@ -170,7 +223,7 @@ void Okeypad::exec(int code) {
     Serial.println(item["name"]);
 
     JSONVar acts = item["acts"];
-    
+
     for (int i = 0; i < acts.length(); i++) {
       JSONVar act = acts[i];
       Serial.print("act => ");
@@ -179,12 +232,20 @@ void Okeypad::exec(int code) {
         Keyboard.print((const char *)act["arg"]);
       } else if (act.hasPropertyEqual("type", "press")) {
         Keyboard.press((uint8_t)act["arg"]);
+      } else if (act.hasPropertyEqual("type", "pressID")) {
+        Keyboard.pressID((uint8_t)act["arg"]);
       } else if (act.hasPropertyEqual("type", "release")) {
         Keyboard.release((uint8_t)act["arg"]);
+      } else if (act.hasPropertyEqual("type", "releaseID")) {
+        Keyboard.releaseID((uint8_t)act["arg"]);
+      } else if (act.hasPropertyEqual("type", "write")) {
+        Keyboard.write((uint8_t)act["arg"]);
+      } else if (act.hasPropertyEqual("type", "writeID")) {
+        Keyboard.writeID((uint8_t)act["arg"]);
       } else if (act.hasPropertyEqual("type", "releaseAll")) {
         Keyboard.releaseAll();
       } else if (act.hasPropertyEqual("type", "delay")) {
-        delay((unsigned long) act["arg"]);
+        delay((unsigned long)act["arg"]);
       }
     }
   }

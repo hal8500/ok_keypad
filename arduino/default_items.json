@@ -1,0 +1,58 @@
+[
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    {
+        "name": "chrome setup",
+        "acts": [
+            {
+                "type": "print",
+                "arg": "\t"
+            },
+            {
+                "type": "pressID",
+                "arg": 81
+            },
+            {
+                "type": "delay",
+                "arg": 1500
+            },
+            {
+                "type": "releaseAll"
+            },
+            {
+                "type": "print",
+                "arg": " "
+            },
+            {
+                "type": "delay",
+                "arg": 500
+            },
+            {
+                "type": "print",
+                "arg": "aaaaaa"
+            },
+            {
+                "type": "print",
+                "arg": "\t"
+            },
+            {
+                "type": "print",
+                "arg": "p"
+            },
+            {
+                "type": "print",
+                "arg": "\t"
+            },
+            {
+                "type": "print",
+                "arg": "password"
+            }
+        ]
+    }
+]
