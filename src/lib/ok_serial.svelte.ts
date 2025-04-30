@@ -39,7 +39,7 @@ class LineBreakTransformer implements Transformer<string, string> {
   }
 }
 
-const SLOTS_DEFAULT: SlotList = [
+export const SLOTS_DEFAULT: SlotList = [
   "aiueo",
   "test@example.com",
   "3",
@@ -59,7 +59,7 @@ const SLOTS_DEFAULT: SlotList = [
   },
 ];
 
-function isSlotList(json: any) : json is SlotList{
+function isSlotList(json: any): json is SlotList {
   if (!("length" in json)) {
     return false;
   }
@@ -67,14 +67,14 @@ function isSlotList(json: any) : json is SlotList{
     return false;
   }
   for (const s of json) {
-    if (typeof (s) == "string") {
+    if (typeof s == "string") {
       continue;
     }
     if (!("acts" in s) || !("length" in s.acts)) {
       return false;
     }
     for (const a of s.acts) {
-      if (typeof(s) != "string") {
+      if (!("type" in a)) {
         return false;
       }
     }
@@ -86,7 +86,7 @@ export class OkSerial {
   ports: SerialPort[] = $state([]);
   currentPort: SerialPort | null = $state(null);
   message: string = $state("");
-  slots: SlotList | null = $state(SLOTS_DEFAULT);
+  slots: SlotList | null = $state(null);
   writer: WritableStreamDefaultWriter<string> | null = null;
 
   closer: (() => Promise<void>) | null = null;
@@ -175,10 +175,14 @@ export class OkSerial {
       const j = JSON.parse(line);
       if (isSlotList(j)) {
         this.slots = j;
+      } else {
+        console.log("invalid items");
+        this.slots = null;
       }
     } catch (e) {
       console.log("failed to parse");
       console.log(e);
+      this.slots = null;
     }
   }
 
