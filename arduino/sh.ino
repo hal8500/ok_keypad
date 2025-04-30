@@ -35,3 +35,5 @@ String Shell::getLine() {
     return "";
   }
 }
+
+Shell sh;

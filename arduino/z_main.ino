@@ -1,8 +1,6 @@
 #define _POWER_LED 25
 #define _ACT_LED 2
 
-Shell sh;
-
 void setup() {
   Serial.setTimeout(20);
   Serial.begin(9600);
