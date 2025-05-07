@@ -83,10 +83,12 @@ function isSlotList(json: any): json is SlotList {
 }
 
 export class OkSerial {
-  ports: SerialPort[] = $state([]);
-  currentPort: SerialPort | null = $state(null);
+  ports: SerialPort[] = $state.raw([]);
+  currentPort: SerialPort | null = $state.raw(null);
   message: string = $state("");
   slots: SlotList | null = $state(null);
+  editingSlots: SlotList = $state(SLOTS_DEFAULT);
+  edited: boolean = $state(false);
   writer: WritableStreamDefaultWriter<string> | null = null;
 
   closer: (() => Promise<void>) | null = null;
@@ -167,10 +169,16 @@ export class OkSerial {
     }
     this.currentPort = null;
     this.writer = null;
+    this.slots = null;
+    this.edited = false;
     this.closer = null;
   }
 
   async onRecieve(line: string) {
+    console.log("> " + line);
+    if (!line.startsWith("[") && !line.startsWith("{")) {
+      return;
+    }
     try {
       const j = JSON.parse(line);
       if (isSlotList(j)) {
@@ -184,10 +192,12 @@ export class OkSerial {
       console.log(e);
       this.slots = null;
     }
+    this.edited = this.isDirty();
   }
 
   async send(text: string) {
     if (this.writer === null) return null;
+    console.log("< " + text);
     await this.writer.write(text);
   }
 
@@ -195,6 +205,40 @@ export class OkSerial {
     if (this.currentPort === null) return null;
     this.message = "reading list";
     const r = await this.send("list_json\n");
+  }
+
+  loadSlotsToEditing() {
+    if (this.slots) {
+      this.editingSlots = $state.snapshot(this.slots);
+      this.editingSlots[1] = Date.now().toString();
+      this.edited = false;
+    }
+  }
+
+  async saveSlotsFromEditing() {
+    if (this.slots) {
+      const b = JSON.stringify(this.editingSlots);
+      await this.send(`set_json ${b} \n`);
+      await this.send("list_json \n");
+      // list_jsonの結果でthis.slotsが更新される
+    }
+  }
+
+  updateEditing(value: string) {
+    try {
+      const v = JSON.parse(value);
+      this.editingSlots = v;
+      this.edited = this.isDirty();
+    } catch {}
+  }
+
+  isDirty() {
+    if (this.slots) {
+      const a = JSON.stringify(this.slots);
+      const b = JSON.stringify(this.editingSlots);
+      return a != b;
+    }
+    return false;
   }
 }
 

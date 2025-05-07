@@ -1,14 +1,12 @@
 <script lang="ts">
-  import {
-    OkSerial,
-    SLOTS_DEFAULT,
-    type SlotList,
-  } from "$lib/ok_serial.svelte";
+  import { OkSerial } from "$lib/ok_serial.svelte";
+  import { onMount, onDestroy } from "svelte";
+  import JsonEdit from "./JsonEdit.svelte";
   import SlotListView from "./SlotListView.svelte";
 
   const ok = new OkSerial();
-  const editting = $state(SLOTS_DEFAULT);
-  ok.reloadPorts();
+  let showEditor = $state(false);
+  let dialog: HTMLDialogElement;
 
   async function connect(port: SerialPort) {
     try {
@@ -18,6 +16,14 @@
       console.error(e);
     }
   }
+
+  onMount(() => {
+    ok.reloadPorts();
+  });
+
+  onDestroy(() => {
+    ok.close();
+  });
 </script>
 
 <h1>OkeyPad configurator</h1>
@@ -39,8 +45,8 @@
       <li>
         <pre><code>{JSON.stringify(port.getInfo())}</code></pre>
         {#if port == ok.currentPort}
-          <span>connected</span>
           <button onclick={() => ok.close()}>切断</button>
+          <span>connected</span>
         {:else}
           <button onclick={() => connect(port)}>接続</button>
         {/if}
@@ -60,17 +66,60 @@
     {/if}
   </div>
   <div class="item">
-    <h2>編集ボタン設定</h2>
-    <SlotListView slotlist={editting} />
+    <h2>編集中の設定</h2>
+
+    <SlotListView slotlist={ok.editingSlots} />
+    <div>
+      <button
+        disabled={ok.slots == null}
+        onclick={() => ok.loadSlotsToEditing()}>▶ 機器の設定を取り込む</button
+      >
+      <button
+        disabled={ok.slots == null}
+        onclick={() => ok.saveSlotsFromEditing()}
+        >◀ 設定を機器に書き込む</button
+      >
+      <button
+        onclick={() => {
+          dialog.showModal();
+          showEditor = true;
+        }}
+      >
+        JSON編集
+      </button>
+    </div>
   </div>
 </div>
 
 <hr />
 
+<dialog
+  bind:this={dialog}
+  onclose={() => {
+    ok.message = "closed";
+    showEditor = false;
+  }}
+>
+  <h1>JSON Editor</h1>
+  {#if showEditor}
+    <JsonEdit
+      editingSlots={ok.editingSlots}
+      onsave={(value) => {
+        ok.updateEditing(value);
+        dialog.close();
+        // TODO: valueが正しい形式でない場合の処理
+      }}
+      oncancel={() => {
+        dialog.close();
+      }}
+    ></JsonEdit>
+  {/if}
+</dialog>
+
 <div class="debuginfo">
   <h2>デバッグ情報</h2>
   <pre><code>{ok.message}</code></pre>
-  <pre><code>{JSON.stringify(ok.slots)}</code></pre>
+  <pre><code>{JSON.stringify(ok.editingSlots)}</code></pre>
 </div>
 
 <style>
@@ -88,5 +137,8 @@
   .debuginfo {
     width: 100%;
     overflow: auto;
+  }
+  dialog {
+    width: 80%;
   }
 </style>
