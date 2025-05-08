@@ -2,11 +2,11 @@
   import { onDestroy, onMount } from "svelte";
   import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
   import { browser } from "$app/environment";
-  import { type SlotList } from "$lib/ok_serial.svelte";
   let editor: Monaco.editor.IStandaloneCodeEditor;
   let monaco: typeof Monaco;
   let editorContainer: HTMLElement;
   import schema from "$lib/slotlist_schema.json";
+  import type { SlotList } from "$lib/types";
 
   let {
     editingSlots,
@@ -26,7 +26,7 @@
         validate: true,
         schemas: [
           {
-            uri: "https://okeypad.config/config.json",
+            uri: "",
             fileMatch: [modelUri.toString()],
             schema,
           },

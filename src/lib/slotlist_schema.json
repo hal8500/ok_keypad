@@ -22,10 +22,11 @@
                                             "press",
                                             "pressID",
                                             "print",
-                                            "printID",
                                             "release",
                                             "releaseAll",
-                                            "releaseID"
+                                            "releaseID",
+                                            "write",
+                                            "writeID"
                                         ],
                                         "type": "string"
                                     },

@@ -1,25 +1,4 @@
-export type Action = {
-  type:
-    | "print"
-    | "press"
-    | "release"
-    | "releaseAll"
-    | "delay"
-    | "move"
-    | "click";
-  arg?: string | number;
-  x?: number;
-  y?: number;
-};
-
-export type MacroCommand = {
-  name?: string;
-  actions: Action[];
-};
-
-export type SlotCommand = string | MacroCommand;
-export type SlotList = SlotCommand[];
-
+import { type SlotList } from "./types";
 class LineBreakTransformer implements Transformer<string, string> {
   chunks: string;
 
@@ -219,8 +198,9 @@ export class OkSerial {
   async saveSlotsFromEditing() {
     if (this.slots) {
       const b = JSON.stringify(this.editingSlots);
-      await this.send(`set_json ${b} \n`);
-      await this.send("list_json \n");
+      await this.send(`set_json ${b}\n`);
+      await delay(100);
+      await this.send("list_json\n");
       // list_jsonの結果でthis.slotsが更新される
     }
   }
