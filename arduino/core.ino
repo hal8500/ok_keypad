@@ -5,7 +5,7 @@ const String FILE_PATH = "/j.json";
 /*
 items = [
   "text",
-  {name: string, actions:[ {type:"print"|"press(ID)?"|"release(ID)?"|"write(ID)?"|"releaseAll"|"delay"|"move", arg:int|string, x:int, y|int} ]},
+  {name: string, actions:[ {type:"print"|"press(ID)?"|"release(ID)?"|"write(ID)?"|"releaseAll"|"delay"|"move"|"click", arg:int|string, x:int, y|int} ]},
 ]
 
 # pressとpressIDの違い 

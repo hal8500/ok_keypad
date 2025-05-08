@@ -1,0 +1,60 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "SlotCommand": {
+            "anyOf": [
+                {
+                    "properties": {
+                        "actions": {
+                            "items": {
+                                "properties": {
+                                    "arg": {
+                                        "type": [
+                                            "string",
+                                            "number"
+                                        ]
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "click",
+                                            "delay",
+                                            "move",
+                                            "press",
+                                            "pressID",
+                                            "print",
+                                            "printID",
+                                            "release",
+                                            "releaseAll",
+                                            "releaseID"
+                                        ],
+                                        "type": "string"
+                                    },
+                                    "x": {
+                                        "type": "number"
+                                    },
+                                    "y": {
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "type": "array"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        }
+    },
+    "items": {
+        "$ref": "#/definitions/SlotCommand"
+    },
+    "type": "array"
+}
+

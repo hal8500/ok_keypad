@@ -6,13 +6,7 @@
   let editor: Monaco.editor.IStandaloneCodeEditor;
   let monaco: typeof Monaco;
   let editorContainer: HTMLElement;
-
-  const schema = {
-    type: "array",
-    minItems: 1,
-    maxItems: 9,
-    items: { anyOf: [{ type: "object" }, { type: "string" }] },
-  };
+  import schema from "$lib/slotlist_schema.json";
 
   let {
     editingSlots,
@@ -65,7 +59,7 @@
 
 <style>
   .container {
-    width: 100%;
-    height: 600px;
+    width: 90%;
+    height: calc(100vh - 180px);
   }
 </style>
