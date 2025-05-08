@@ -9,7 +9,7 @@
     "8",
     {
         "name": "chrome setup",
-        "acts": [
+        "actions": [
             {
                 "type": "print",
                 "arg": "\t"

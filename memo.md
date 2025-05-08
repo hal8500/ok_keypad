@@ -24,7 +24,7 @@ keypadに割り当てられているマクロはマクロ一覧と同期して�
 マクロ編集画面　（ダイアログ形式）
     複製
     項目の編集
-    actsの追加、並び替え、削除
+    actionsの追加、並び替え、削除
 
 エディター
 <https://www.codelantis.com/blog/sveltekit-monaco-editor>

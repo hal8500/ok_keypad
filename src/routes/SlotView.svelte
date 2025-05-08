@@ -12,8 +12,8 @@
     <span>:</span>
     <span class="value">{slot.name}</span>
     <ol>
-      {#each slot.acts as act}
-        <li>{@render renderAction(act)}</li>
+      {#each slot.actions as action}
+        <li>{@render renderAction(action)}</li>
       {/each}
     </ol>
   </div>

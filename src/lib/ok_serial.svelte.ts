@@ -14,7 +14,7 @@ export type Action = {
 
 export type MacroCommand = {
   name?: string;
-  acts: Action[];
+  actions: Action[];
 };
 
 export type SlotCommand = string | MacroCommand;
@@ -50,7 +50,7 @@ export const SLOTS_DEFAULT: SlotList = [
   "8",
   {
     name: "macro",
-    acts: [
+    actions: [
       { type: "press", arg: 114 },
       { type: "delay", arg: 1000 },
       { type: "releaseAll" },
@@ -70,10 +70,10 @@ function isSlotList(json: any): json is SlotList {
     if (typeof s == "string") {
       continue;
     }
-    if (!("acts" in s) || !("length" in s.acts)) {
+    if (!("actions" in s) || !("length" in s.actions)) {
       return false;
     }
-    for (const a of s.acts) {
+    for (const a of s.actions) {
       if (!("type" in a)) {
         return false;
       }
@@ -102,6 +102,8 @@ export class OkSerial {
   async requestPort() {
     const port = await navigator.serial.requestPort();
     this.message = JSON.stringify(port.getInfo());
+    await this.openPort(port);
+    await this.requestList();
     await this.reloadPorts();
   }
 
@@ -210,7 +212,6 @@ export class OkSerial {
   loadSlotsToEditing() {
     if (this.slots) {
       this.editingSlots = $state.snapshot(this.slots);
-      this.editingSlots[1] = Date.now().toString();
       this.edited = false;
     }
   }

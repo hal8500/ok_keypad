@@ -5,7 +5,7 @@ const String FILE_PATH = "/j.json";
 /*
 items = [
   "text",
-  {name: string, acts:[ {type:"print"|"press(ID)?"|"release(ID)?"|"write(ID)?"|"releaseAll"|"delay"|"move", arg:int|string, x:int, y|int} ]},
+  {name: string, actions:[ {type:"print"|"press(ID)?"|"release(ID)?"|"write(ID)?"|"releaseAll"|"delay"|"move", arg:int|string, x:int, y|int} ]},
 ]
 
 # pressとpressIDの違い 
@@ -26,7 +26,7 @@ const String DEFAULT_ITEMS_JSON = R"(
     "8",
     {
         "name": "chrome setup",
-        "acts": [
+        "actions": [
             {
                 "type": "print",
                 "arg": "\t"
@@ -222,10 +222,10 @@ void Okeypad::exec(int code) {
     Serial.print("call macro: ");
     Serial.println(item["name"]);
 
-    JSONVar acts = item["acts"];
+    JSONVar actions = item["actions"];
 
-    for (int i = 0; i < acts.length(); i++) {
-      JSONVar act = acts[i];
+    for (int i = 0; i < actions.length(); i++) {
+      JSONVar act = actions[i];
       Serial.print("act => ");
       Serial.println(act);
       if (act.hasPropertyEqual("type", "print")) {
