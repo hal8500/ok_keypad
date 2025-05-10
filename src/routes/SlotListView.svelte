@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { SlotList } from "$lib/ok_serial.svelte";
+  import type { SlotList } from "$lib/types";
   import SlotView from "./SlotView.svelte";
 
   let { slotlist }: { slotlist: SlotList } = $props();

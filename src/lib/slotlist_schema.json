@@ -1,51 +1,412 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
-        "SlotCommand": {
+        "KeyIds": {
+            "enum": [
+                "BACKSPACE",
+                "CAPS_LOCK",
+                "DELETE",
+                "DOWN_ARROW",
+                "END",
+                "ESC",
+                "F1",
+                "F10",
+                "F11",
+                "F12",
+                "F13",
+                "F14",
+                "F15",
+                "F16",
+                "F17",
+                "F18",
+                "F19",
+                "F2",
+                "F20",
+                "F21",
+                "F22",
+                "F23",
+                "F24",
+                "F3",
+                "F4",
+                "F5",
+                "F6",
+                "F7",
+                "F8",
+                "F9",
+                "HOME",
+                "INSERT",
+                "KP_0",
+                "KP_1",
+                "KP_2",
+                "KP_3",
+                "KP_4",
+                "KP_5",
+                "KP_6",
+                "KP_7",
+                "KP_8",
+                "KP_9",
+                "KP_ASTERISK",
+                "KP_DOT",
+                "KP_ENTER",
+                "KP_MINUS",
+                "KP_PLUS",
+                "KP_SLASH",
+                "LEFT_ALT",
+                "LEFT_ARROW",
+                "LEFT_CTRL",
+                "LEFT_GUI",
+                "LEFT_SHIFT",
+                "MENU",
+                "NUM_LOCK",
+                "PAGE_DOWN",
+                "PAGE_UP",
+                "PAUSE",
+                "PRINT_SCREEN",
+                "RETURN",
+                "RIGHT_ALT",
+                "RIGHT_ARROW",
+                "RIGHT_CTRL",
+                "RIGHT_GUI",
+                "RIGHT_SHIFT",
+                "SCROLL_LOCK",
+                "TAB",
+                "UP_ARROW"
+            ],
+            "type": "string"
+        },
+        "MacroActions": {
             "anyOf": [
                 {
+                    "additionalProperties": false,
+                    "description": "一連の文字列をタイプします",
                     "properties": {
-                        "actions": {
-                            "items": {
-                                "properties": {
-                                    "arg": {
-                                        "type": [
-                                            "string",
-                                            "number"
-                                        ]
-                                    },
-                                    "type": {
-                                        "enum": [
-                                            "click",
-                                            "delay",
-                                            "move",
-                                            "press",
-                                            "pressID",
-                                            "print",
-                                            "release",
-                                            "releaseAll",
-                                            "releaseID",
-                                            "write",
-                                            "writeID"
-                                        ],
-                                        "type": "string"
-                                    },
-                                    "x": {
-                                        "type": "number"
-                                    },
-                                    "y": {
-                                        "type": "number"
-                                    }
-                                },
-                                "type": "object"
-                            },
-                            "type": "array"
-                        },
-                        "name": {
+                        "type": {
+                            "description": "一連の文字列をタイプします",
                             "type": "string"
                         }
                     },
+                    "required": [
+                        "type"
+                    ],
                     "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "指定されたキーを押して離します",
+                    "properties": {
+                        "tap": {
+                            "description": "指定されたキーを押して離します",
+                            "maxLength": 1,
+                            "minLength": 1,
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "tap"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "指定されたキーを押して離します",
+                    "properties": {
+                        "tap": {
+                            "$ref": "#/definitions/KeyIds",
+                            "description": "指定されたキーを押して離します"
+                        }
+                    },
+                    "required": [
+                        "tap"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "指定されたキーを押します",
+                    "properties": {
+                        "press": {
+                            "description": "指定されたキーを押します",
+                            "maxLength": 1,
+                            "minLength": 1,
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "press"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "指定されたキーを押します",
+                    "properties": {
+                        "press": {
+                            "$ref": "#/definitions/KeyIds",
+                            "description": "指定されたキーを押します"
+                        }
+                    },
+                    "required": [
+                        "press"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "指定されたキーを離します",
+                    "properties": {
+                        "release": {
+                            "description": "指定されたキーを離します",
+                            "maxLength": 1,
+                            "minLength": 1,
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "release"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "指定されたキーを離します",
+                    "properties": {
+                        "release": {
+                            "description": "指定されたキーを離します",
+                            "enum": [
+                                "ALL",
+                                "BACKSPACE",
+                                "CAPS_LOCK",
+                                "DELETE",
+                                "DOWN_ARROW",
+                                "END",
+                                "ESC",
+                                "F1",
+                                "F10",
+                                "F11",
+                                "F12",
+                                "F13",
+                                "F14",
+                                "F15",
+                                "F16",
+                                "F17",
+                                "F18",
+                                "F19",
+                                "F2",
+                                "F20",
+                                "F21",
+                                "F22",
+                                "F23",
+                                "F24",
+                                "F3",
+                                "F4",
+                                "F5",
+                                "F6",
+                                "F7",
+                                "F8",
+                                "F9",
+                                "HOME",
+                                "INSERT",
+                                "KP_0",
+                                "KP_1",
+                                "KP_2",
+                                "KP_3",
+                                "KP_4",
+                                "KP_5",
+                                "KP_6",
+                                "KP_7",
+                                "KP_8",
+                                "KP_9",
+                                "KP_ASTERISK",
+                                "KP_DOT",
+                                "KP_ENTER",
+                                "KP_MINUS",
+                                "KP_PLUS",
+                                "KP_SLASH",
+                                "LEFT_ALT",
+                                "LEFT_ARROW",
+                                "LEFT_CTRL",
+                                "LEFT_GUI",
+                                "LEFT_SHIFT",
+                                "MENU",
+                                "NUM_LOCK",
+                                "PAGE_DOWN",
+                                "PAGE_UP",
+                                "PAUSE",
+                                "PRINT_SCREEN",
+                                "RETURN",
+                                "RIGHT_ALT",
+                                "RIGHT_ARROW",
+                                "RIGHT_CTRL",
+                                "RIGHT_GUI",
+                                "RIGHT_SHIFT",
+                                "SCROLL_LOCK",
+                                "TAB",
+                                "UP_ARROW"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "release"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "指定されたミリ秒だけ、動作を停止します",
+                    "properties": {
+                        "delay": {
+                            "description": "指定されたミリ秒だけ、動作を停止します",
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "delay"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "マウスの指定されたボタンをクリックします",
+                    "properties": {
+                        "click": {
+                            "description": "マウスの指定されたボタンをクリックします",
+                            "enum": [
+                                "LEFT",
+                                "MIDDLE",
+                                "RIGHT"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "click"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "マウスを指定された量だけ移動します",
+                    "properties": {
+                        "move": {
+                            "additionalProperties": false,
+                            "description": "マウスを指定された量だけ移動します",
+                            "properties": {
+                                "x": {
+                                    "type": "number"
+                                },
+                                "y": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "x",
+                                "y"
+                            ],
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "move"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "マクロの名称や用途を記述します。\nマクロの１番目の要素に配置してください。",
+                    "properties": {
+                        "description": {
+                            "description": "マクロの用途を記述します",
+                            "type": "string"
+                        },
+                        "name": {
+                            "description": "マクロの名称を記述します",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "name"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "type": [
+                        "string",
+                        "number"
+                    ]
+                }
+            ]
+        },
+        "SlotCommand": {
+            "anyOf": [
+                {
+                    "additionalProperties": false,
+                    "description": "一連の文字列をタイプします",
+                    "properties": {
+                        "type": {
+                            "description": "一連の文字列をタイプします",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "マウスの指定されたボタンをクリックします",
+                    "properties": {
+                        "click": {
+                            "description": "マウスの指定されたボタンをクリックします",
+                            "enum": [
+                                "LEFT",
+                                "MIDDLE",
+                                "RIGHT"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "click"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "ボタンを指定されたキーとして機能させます",
+                    "properties": {
+                        "button": {
+                            "description": "ボタンを指定されたキーとして機能させます",
+                            "maxLength": 1,
+                            "minLength": 1,
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "button"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "ボタンを指定されたキーとして機能させます",
+                    "properties": {
+                        "button": {
+                            "$ref": "#/definitions/KeyIds",
+                            "description": "ボタンを指定されたキーとして機能させます"
+                        }
+                    },
+                    "required": [
+                        "button"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "items": {
+                        "$ref": "#/definitions/MacroActions"
+                    },
+                    "type": "array"
                 },
                 {
                     "type": "string"

@@ -12,7 +12,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run",
-		"schema": "npx typescript-json-schema ./src/lib/types.ts SlotList --out ./src/lib/slotlist_schema.json"
+		"schema": "npx typescript-json-schema ./src/lib/types.ts SlotList --noExtraProps --required --out ./src/lib/slotlist_schema.json"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-cloudflare": "^7.0.3",

@@ -1,4 +1,12 @@
-import { type SlotList } from "./types";
+import {
+  isSlotList,
+  SLOTS_DEFAULT,
+  type MacroActions,
+  type Char,
+  type KeyIds,
+  type SlotCommand,
+  type SlotList,
+} from "./types";
 class LineBreakTransformer implements Transformer<string, string> {
   chunks: string;
 
@@ -16,49 +24,6 @@ class LineBreakTransformer implements Transformer<string, string> {
   flush(controller: TransformStreamDefaultController) {
     controller.enqueue(this.chunks);
   }
-}
-
-export const SLOTS_DEFAULT: SlotList = [
-  "aiueo",
-  "test@example.com",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  {
-    name: "macro",
-    actions: [
-      { type: "press", arg: 114 },
-      { type: "delay", arg: 1000 },
-      { type: "releaseAll" },
-      { type: "print", arg: "mcr" },
-    ],
-  },
-];
-
-function isSlotList(json: any): json is SlotList {
-  if (!("length" in json)) {
-    return false;
-  }
-  if (json.length != 9) {
-    return false;
-  }
-  for (const s of json) {
-    if (typeof s == "string") {
-      continue;
-    }
-    if (!("actions" in s) || !("length" in s.actions)) {
-      return false;
-    }
-    for (const a of s.actions) {
-      if (!("type" in a)) {
-        return false;
-      }
-    }
-  }
-  return true;
 }
 
 export class OkSerial {
@@ -190,8 +155,11 @@ export class OkSerial {
 
   loadSlotsToEditing() {
     if (this.slots) {
-      this.editingSlots = $state.snapshot(this.slots);
-      this.edited = false;
+      const d = $state.snapshot(this.slots);
+      if (isSlotList(d)) {
+        this.editingSlots = d;
+        this.edited = false;
+      }
     }
   }
 
