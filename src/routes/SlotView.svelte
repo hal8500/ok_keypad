@@ -1,7 +1,7 @@
 <script lang="ts">
   import {
     explainAction,
-    isMacroDescription,
+    isMacroCommand,
     type Actions,
     type SlotCommand,
   } from "$lib/types";
@@ -9,21 +9,22 @@
   let { slot }: { slot: SlotCommand } = $props();
 </script>
 
-{#if Array.isArray(slot)}
-  {#if isMacroDescription(slot[0])}
-    {@const desc = slot[0]}
-    <div>
-      <span class="name">{desc.name}</span>
-      {#if "description" in desc}
-        <p class="desc">{desc.description}</p>
-      {/if}
-    </div>
-  {/if}
+{#if isMacroCommand(slot)}
+  <div>
+    <span class="name">{slot.name}</span>
+    {#if "description" in slot}
+      <p class="desc">{slot.description}</p>
+    {/if}
+  </div>
+  <ol>
+    {#each slot.actions as action}
+      <li>{@render renderAction(action)}</li>
+    {/each}
+  </ol>
+{:else if Array.isArray(slot)}
   <ol>
     {#each slot as action}
-      {#if !isMacroDescription(action)}
-        <li>{@render renderAction(action)}</li>
-      {/if}
+      <li>{@render renderAction(action)}</li>
     {/each}
   </ol>
 {:else}

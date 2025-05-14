@@ -141,7 +141,17 @@ export type ReleaseIdAction = {
   /**
    * 指定されたキーを離します
    */
-  release: KeyIds | "ALL";
+  release: KeyIds;
+};
+
+/**
+ * 指定されたキーを離します
+ */
+export type ReleaseAllAction = {
+  /**
+   * 指定されたキーを離します
+   */
+  release: "ALL";
 };
 
 /**
@@ -194,21 +204,6 @@ export type ButtonIdAssign = {
   button: KeyIds;
 };
 
-/**
- * マクロの名称や用途を記述します。
- * マクロの１番目の要素に配置してください。
- */
-export type MacroDescription = {
-  /**
-   * マクロの名称を記述します
-   */
-  name: string;
-  /**
-   * マクロの用途を記述します
-   */
-  description?: string;
-};
-
 export type SingleActions =
   | TypeAction
   | ButtonAssign
@@ -224,16 +219,32 @@ export type MacroActions =
   | PressIdAction
   | ReleaseAction
   | ReleaseIdAction
+  | ReleaseAllAction
   | DelayAction
   | MouseClickAction
   | MouseMoveAction
-  | MacroDescription
   | string
   | number;
 
+export type MacroCommand = {
+  /**
+   * マクロの名称を記述します
+   */
+  name: string;
+  /**
+   * マクロの用途を記述します
+   */
+  description?: string;
+
+  /**
+   * マクロの内容を定義します
+   */
+  actions: MacroActions[];
+};
+
 export type Actions = SingleActions | MacroActions;
 
-export type SlotCommand = SingleActions | MacroActions[];
+export type SlotCommand = SingleActions | MacroCommand | MacroActions[];
 export type SlotList = SlotCommand[];
 
 export function isTypeAction(obj: any): obj is TypeAction {
@@ -269,10 +280,6 @@ export function isMouseMoveActionAction(obj: any): obj is MouseMoveAction {
   return false;
 }
 
-export function isMacroDescription(obj: any): obj is MacroDescription {
-  return "name" in obj && typeof obj.name == "string";
-}
-
 export function isButtonAssign(obj: any): obj is ButtonAssign {
   return "button" in obj && typeof obj.button == "string";
 }
@@ -283,11 +290,22 @@ export function isSlotList(obj: any): obj is SlotList {
 }
 
 export function isSlotCommand(obj: any): obj is SlotCommand {
-  if (Array.isArray(obj)) {
+  if (isMacroCommand(obj)) {
+    return true;
+  } else if (Array.isArray(obj)) {
     return obj.every((v) => isMacroActions(v));
   } else {
-    return isMacroActions(obj);
+    return isSingleActions(obj);
   }
+}
+
+export function isMacroCommand(obj: any): obj is MacroCommand {
+  if (typeof obj == "object" && "name" in obj && typeof obj.name == "string") {
+    if ("actions" in obj && Array.isArray(obj.actions)) {
+      return obj.actions.every((v: any) => isMacroActions(v));
+    }
+  }
+  return false;
 }
 
 export function isSingleActions(obj: any): obj is SingleActions {
@@ -343,9 +361,6 @@ export function explainAction(action: Actions) {
       type: "pos",
     };
   }
-  if (isMacroDescription(action)) {
-    return { name: "name", arg: action.name, type: "desc" };
-  }
   if (isButtonAssign(action)) {
     return { name: "button", arg: action.button, type: "key" };
   }
@@ -357,70 +372,71 @@ export const SLOTS_DEFAULT: SlotList = [
   { type: "hello world" },
   { button: "a" },
   { button: "TAB" },
-  [{ name: "sample macro 1" }, { type: "this is macro 1" }],
-  [
-    { name: "sample macro 2", description: "これは説明用のサンプルマクロです" },
-    { press: "a" },
-    { delay: 1000 },
-    { release: "ALL" },
-  ],
-  [
-    {
-      name: "sample macro 3",
-      description:
-        "これは説明用のサンプルマクロです。長いタイプの説明文です。あああああ本日は晴天なり",
-    },
-    { press: "a" },
-    { delay: 1000 },
-    { release: "ALL" },
-    { click: "LEFT" },
-    { move: { x: 10, y: 30 } },
-  ],
+  { name: "sample macro 1", actions: [{ type: "this is macro 1" }] },
+  {
+    name: "sample macro 2",
+    description: "これは説明用のサンプルマクロです",
+    actions: [{ press: "a" }, { delay: 1000 }, { release: "ALL" }],
+  },
+
+  {
+    name: "sample macro 3",
+    description:
+      "これは説明用のサンプルマクロです。長いタイプの説明文です。あああああ本日は晴天なり",
+    actions: [
+      { press: "a" },
+      { delay: 1000 },
+      { release: "ALL" },
+      { click: "LEFT" },
+      { move: { x: 10, y: 30 } },
+    ],
+  },
+
   [{ press: "r" }, { delay: 1000 }, { release: "ALL" }, { type: "macro" }],
-  [
-    {
-      name: "chrome setup",
-      description:
-        "chromeのセットアップ自動化マクロ",
-    },
-    { tap: "TAB" },
-    { press: "DOWN_ARROW" },
-    { delay: 1500 },
-    { release: "DOWN_ARROW" },
-    { type: " " },
-    { delay: 500 },
-    { type: "ssid aaaa" },
-    { tap: "TAB" },
-    { tap: "p" },
-    { tap: "TAB" },
-    { type: "password" }
-  ]
+
+  {
+    name: "chrome setup",
+    description: "chromeのセットアップ自動化マクロ",
+    actions: [
+      { tap: "TAB" },
+      { press: "DOWN_ARROW" },
+      { delay: 1500 },
+      { release: "DOWN_ARROW" },
+      { type: " " },
+      { delay: 500 },
+      { type: "ssid aaaa" },
+      { tap: "TAB" },
+      { tap: "p" },
+      { tap: "TAB" },
+      { type: "password" },
+    ],
+  },
 ];
 
 export const KEY_TABLE = {
-  LEFT_CTRL: 0xE0,
-  LEFT_SHIFT: 0xE1,
-  LEFT_ALT: 0xE2,
-  LEFT_GUI: 0xE3,
-  RIGHT_CTRL: 0xE4,
-  RIGHT_SHIFT: 0xE5,
-  RIGHT_ALT: 0xE6,
-  RIGHT_GUI: 0xE7,
+  LEFT_CTRL: 0xe0,
+  LEFT_SHIFT: 0xe1,
+  LEFT_ALT: 0xe2,
+  LEFT_GUI: 0xe3,
+  RIGHT_CTRL: 0xe4,
+  RIGHT_SHIFT: 0xe5,
+  RIGHT_ALT: 0xe6,
+  RIGHT_GUI: 0xe7,
   RETURN: 0x28,
   ESC: 0x29,
-  BACKSPACE: 0x2A,
-  TAB: 0x2B,
+  BACKSPACE: 0x2a,
+  TAB: 0x2b,
   CAPS_LOCK: 0x39,
   PRINT_SCREEN: 0x46,
   SCROLL_LOCK: 0x47,
   PAUSE: 0x48,
   INSERT: 0x49,
-  HOME: 0x4A,
-  PAGE_UP: 0x4B,
-  DELETE: 0x4C,
-  END: 0x4D,
-  PAGE_DOWN: 0x4E,
-  RIGHT_ARROW: 0x4F,
+  HOME: 0x4a,
+  PAGE_UP: 0x4b,
+  DELETE: 0x4c,
+  END: 0x4d,
+  PAGE_DOWN: 0x4e,
+  RIGHT_ARROW: 0x4f,
   LEFT_ARROW: 0x50,
   DOWN_ARROW: 0x51,
   UP_ARROW: 0x52,
@@ -432,22 +448,22 @@ export const KEY_TABLE = {
   KP_PLUS: 0x57,
   KP_ENTER: 0x58,
   KP_1: 0x59,
-  KP_2: 0x5A,
-  KP_3: 0x5B,
-  KP_4: 0x5C,
-  KP_5: 0x5D,
-  KP_6: 0x5E,
-  KP_7: 0x5F,
+  KP_2: 0x5a,
+  KP_3: 0x5b,
+  KP_4: 0x5c,
+  KP_5: 0x5d,
+  KP_6: 0x5e,
+  KP_7: 0x5f,
   KP_8: 0x60,
   KP_9: 0x61,
   KP_0: 0x62,
   KP_DOT: 0x63,
-  F1: 0x3A,
-  F2: 0x3B,
-  F3: 0x3C,
-  F4: 0x3D,
-  F5: 0x3E,
-  F6: 0x3F,
+  F1: 0x3a,
+  F2: 0x3b,
+  F3: 0x3c,
+  F4: 0x3d,
+  F5: 0x3e,
+  F6: 0x3f,
   F7: 0x40,
   F8: 0x41,
   F9: 0x42,
@@ -456,12 +472,12 @@ export const KEY_TABLE = {
   F12: 0x45,
   F13: 0x68,
   F14: 0x69,
-  F15: 0x6A,
-  F16: 0x6B,
-  F17: 0x6C,
-  F18: 0x6D,
-  F19: 0x6E,
-  F20: 0x6F,
+  F15: 0x6a,
+  F16: 0x6b,
+  F17: 0x6c,
+  F18: 0x6d,
+  F19: 0x6e,
+  F20: 0x6f,
   F21: 0x70,
   F22: 0x71,
   F23: 0x72,
@@ -469,5 +485,4 @@ export const KEY_TABLE = {
   LEFT: 1,
   RIGHT: 2,
   MIDDLE: 4,
-
 };

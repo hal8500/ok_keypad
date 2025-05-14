@@ -171,78 +171,22 @@
                     "description": "指定されたキーを離します",
                     "properties": {
                         "release": {
+                            "$ref": "#/definitions/KeyIds",
+                            "description": "指定されたキーを離します"
+                        }
+                    },
+                    "required": [
+                        "release"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "description": "指定されたキーを離します",
+                    "properties": {
+                        "release": {
+                            "const": "ALL",
                             "description": "指定されたキーを離します",
-                            "enum": [
-                                "ALL",
-                                "BACKSPACE",
-                                "CAPS_LOCK",
-                                "DELETE",
-                                "DOWN_ARROW",
-                                "END",
-                                "ESC",
-                                "F1",
-                                "F10",
-                                "F11",
-                                "F12",
-                                "F13",
-                                "F14",
-                                "F15",
-                                "F16",
-                                "F17",
-                                "F18",
-                                "F19",
-                                "F2",
-                                "F20",
-                                "F21",
-                                "F22",
-                                "F23",
-                                "F24",
-                                "F3",
-                                "F4",
-                                "F5",
-                                "F6",
-                                "F7",
-                                "F8",
-                                "F9",
-                                "HOME",
-                                "INSERT",
-                                "KP_0",
-                                "KP_1",
-                                "KP_2",
-                                "KP_3",
-                                "KP_4",
-                                "KP_5",
-                                "KP_6",
-                                "KP_7",
-                                "KP_8",
-                                "KP_9",
-                                "KP_ASTERISK",
-                                "KP_DOT",
-                                "KP_ENTER",
-                                "KP_MINUS",
-                                "KP_PLUS",
-                                "KP_SLASH",
-                                "LEFT_ALT",
-                                "LEFT_ARROW",
-                                "LEFT_CTRL",
-                                "LEFT_GUI",
-                                "LEFT_SHIFT",
-                                "MENU",
-                                "NUM_LOCK",
-                                "PAGE_DOWN",
-                                "PAGE_UP",
-                                "PAUSE",
-                                "PRINT_SCREEN",
-                                "RETURN",
-                                "RIGHT_ALT",
-                                "RIGHT_ARROW",
-                                "RIGHT_CTRL",
-                                "RIGHT_GUI",
-                                "RIGHT_SHIFT",
-                                "SCROLL_LOCK",
-                                "TAB",
-                                "UP_ARROW"
-                            ],
                             "type": "string"
                         }
                     },
@@ -308,24 +252,6 @@
                     },
                     "required": [
                         "move"
-                    ],
-                    "type": "object"
-                },
-                {
-                    "additionalProperties": false,
-                    "description": "マクロの名称や用途を記述します。\nマクロの１番目の要素に配置してください。",
-                    "properties": {
-                        "description": {
-                            "description": "マクロの用途を記述します",
-                            "type": "string"
-                        },
-                        "name": {
-                            "description": "マクロの名称を記述します",
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "name"
                     ],
                     "type": "object"
                 },
@@ -399,6 +325,31 @@
                     },
                     "required": [
                         "button"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "actions": {
+                            "description": "マクロの内容を定義します",
+                            "items": {
+                                "$ref": "#/definitions/MacroActions"
+                            },
+                            "type": "array"
+                        },
+                        "description": {
+                            "description": "マクロの用途を記述します",
+                            "type": "string"
+                        },
+                        "name": {
+                            "description": "マクロの名称を記述します",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "actions",
+                        "name"
                     ],
                     "type": "object"
                 },
