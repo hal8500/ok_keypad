@@ -28,3 +28,15 @@ keypadに割り当てられているマクロはマクロ一覧と同期して�
 
 エディター
 <https://www.codelantis.com/blog/sveltekit-monaco-editor>
+
+## 参考サイト
+
+[Arduino日本語リファレンス](http://www.musashinodenpa.com/arduino/ref/)
+
+[Keypad Example](https://github.com/Chris--A/Keypad/tree/master/examples)
+
+[ゼロから学ぶ C++](https://rinatz.github.io/cpp-book/)
+
+[c++で動的に配列を作成する](https://forum.arduino.cc/t/set-size-of-member-array-at-runtime/1106318/5)
+
+[Arduino json](https://github.com/arduino-libraries/Arduino_JSON)
