@@ -68,6 +68,8 @@ export type KeyIds =
   | "F23"
   | "F24";
 
+export type MouseButtonIds = "LEFT" | "RIGHT" | "MIDDLE";
+
 /**
  * @minLength 1
  * @maxLength 1
@@ -171,7 +173,7 @@ export type MouseClickAction = {
   /**
    * マウスの指定されたボタンをクリックします
    */
-  click: "LEFT" | "RIGHT" | "MIDDLE";
+  click: MouseButtonIds;
 };
 
 /**
@@ -203,6 +205,17 @@ export type ButtonIdAssign = {
    */
   button: KeyIds;
 };
+
+/**
+ * ボタンを指定されたキーとして機能させます
+ */
+export type ButtonMouseAssign = {
+  /**
+   * ボタンを指定されたキーとして機能させます
+   */
+  button: MouseButtonIds;
+};
+
 
 export type SingleActions =
   | TypeAction
