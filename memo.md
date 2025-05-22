@@ -40,3 +40,23 @@ keypadに割り当てられているマクロはマクロ一覧と同期して�
 [c++で動的に配列を作成する](https://forum.arduino.cc/t/set-size-of-member-array-at-runtime/1106318/5)
 
 [Arduino json](https://github.com/arduino-libraries/Arduino_JSON)
+
+
+## pressとpressIDの違い 
+pressはcharとして出力する。pressIDはUSB HID Usage IDとして出力する？
+
+https://github.com/HisashiKato/KeyboardPicoJP
+https://bsakatu.net/doc/usb-hid-to-scancode/
+
+JSONVarの読み出しについて
+存在しないプロパティや型が一致しない読み出しを行うと型のデフォルト値が返される
+JSONVar json = JSON.parse("{ a: "aa" }")
+int x = (int)json["a"] // x = 0
+int y = (int)json["?"] // y = 0
+
+文字列のJSONVarにlength()を呼び出すと文字列の長さではなく、プロパティの名前の長さを返す
+一旦文字列にキャストしてから長さを調べる
+String x = (String)json["x"];
+int len = x.length();
+
+JSONVarを関数の引数で渡す場合、constで修飾するとバグる
