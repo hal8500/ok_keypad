@@ -83,7 +83,7 @@ public:
 
   void desc() override {
     Serial.print("tap: ");
-    Serial.print(key_);
+    Serial.print((char)key_);
   }
 };
 
@@ -103,7 +103,7 @@ public:
 
   void desc() override {
     Serial.print("tap id: ");
-    Serial.print(key_);
+    Serial.print(getKeyLabel(key_));
   }
 };
 
@@ -121,9 +121,14 @@ public:
     return true;
   }
 
+  
+  void cancel() override {
+    Keyboard.release(key_);
+  }
+
   void desc() override {
     Serial.print("press: ");
-    Serial.print(key_);
+    Serial.print((char)key_);
   }
 };
 
@@ -141,9 +146,13 @@ public:
     return true;
   }
 
+  void cancel() override {
+    Keyboard.releaseID(key_);
+  }
+
   void desc() override {
     Serial.print("press id: ");
-    Serial.print(key_);
+    Serial.print(getKeyLabel(key_));
   }
 };
 
@@ -163,7 +172,7 @@ public:
 
   void desc() override {
     Serial.print("release: ");
-    Serial.print(key_);
+    Serial.print((char)key_);
   }
 };
 
@@ -183,7 +192,7 @@ public:
 
   void desc() override {
     Serial.print("release id: ");
-    Serial.print(key_);
+    Serial.print(getKeyLabel(key_));
   }
 };
 
@@ -307,10 +316,7 @@ public:
 
   bool exec() override;
 
-  void cancel() override {
-    index_ = 0;
-    isActive_ = false;
-  }
+  void cancel() override;
 
   void desc() override;
 };
@@ -333,6 +339,7 @@ public:
   void onRelease() override;
   bool isActive() override;
   bool exec() override;
+  void cancel() override;
   void desc() override;
 };
 

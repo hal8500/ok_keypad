@@ -81,20 +81,11 @@ void keypadEvent(KeypadEvent key) {
   }
 
   if (key == '#' && state == PRESSED) {
-    JSONVar x = JSON.parse("[1, 2, 3]");
-    Serial.println("test");
-    Serial.print("x[0] = ");
-    Serial.println(x[0]);
-    Serial.print("x[4] = ");
-    Serial.println(x[4]);
-    Serial.print("x[4] type = ");
-    Serial.println(JSON.typeof(x[4]));
+    Keyboard.println();
   }
 
   if (key == '0' && state == PRESSED) {
-    Serial.println("reload json");
-    JSONVar json = loadDefaultItemsJson();
-    slotList.loadJson(json);
+    Keyboard.println("https://hal8500.github.io/ok_keypad/");
   }
 }
 

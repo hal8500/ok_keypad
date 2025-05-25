@@ -459,6 +459,15 @@ bool MacroCommand::exec() {
   return false;
 }
 
+void MacroCommand::cancel() {
+  if (isActive_ && index_ < size_) {
+    actions_[index_]->cancel();
+  }
+  Keyboard.releaseAll();
+  index_ = 0;
+  isActive_ = false;
+}
+
 void MacroCommand::desc() {
   if (name_ != "") {
     Serial.print("macro: ");
@@ -508,6 +517,18 @@ void ButtonAssign::onPress() {
 }
 
 void ButtonAssign::onRelease() {
+  this->cancel();
+}
+
+bool ButtonAssign::isActive() {
+  return isActive_;
+}
+
+bool ButtonAssign::exec() {
+  return false;
+}
+
+void ButtonAssign::cancel() {
   isActive_ = false;
   switch (type_) {
     case ButtonType::Char:
@@ -522,17 +543,19 @@ void ButtonAssign::onRelease() {
   }
 }
 
-bool ButtonAssign::isActive() {
-  return isActive_;
-}
-
-bool ButtonAssign::exec() {
-  return false;
-}
-
 void ButtonAssign::desc() {
   Serial.print("button: ");
-  Serial.print(key_);
+  switch (type_) {
+    case ButtonType::Char:
+      Serial.print((char)key_);
+      break;
+    case ButtonType::Id:
+      Serial.print(getKeyLabel(key_));
+      break;
+    case ButtonType::Mouse:
+      Serial.print(getKeyLabel(key_));
+      break;
+  }
 }
 
 
