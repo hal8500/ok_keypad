@@ -1,17 +1,6 @@
+#include "SerialReader.h"
 
-
-class Shell {
-protected:
-  String buffer;
-
-public:
-  Shell()
-    : buffer("") {}
-  bool update();
-  String getLine();
-};
-
-bool Shell::update() {
+bool SerialReader::update() {
   if (Serial.available()) {
     String str = Serial.readString();
     buffer.concat(str);
@@ -23,7 +12,7 @@ bool Shell::update() {
   return false;
 }
 
-String Shell::getLine() {
+String SerialReader::getLine() {
   int idx = buffer.indexOf('\n');
   if (idx != -1) {
     String line = buffer.substring(0, idx);
@@ -36,4 +25,3 @@ String Shell::getLine() {
   }
 }
 
-Shell sh;

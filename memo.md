@@ -41,12 +41,12 @@ keypadに割り当てられているマクロはマクロ一覧と同期して�
 
 [Arduino json](https://github.com/arduino-libraries/Arduino_JSON)
 
+## pressとpressIDの違い
 
-## pressとpressIDの違い 
 pressはcharとして出力する。pressIDはUSB HID Usage IDとして出力する？
 
-https://github.com/HisashiKato/KeyboardPicoJP
-https://bsakatu.net/doc/usb-hid-to-scancode/
+<https://github.com/HisashiKato/KeyboardPicoJP>
+<https://bsakatu.net/doc/usb-hid-to-scancode/>
 
 JSONVarの読み出しについて
 存在しないプロパティや型が一致しない読み出しを行うと型のデフォルト値が返される
