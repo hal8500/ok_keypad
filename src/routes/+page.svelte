@@ -100,7 +100,6 @@
     showEditor = false;
   }}
 >
-  <h1>JSON Editor</h1>
   {#if showEditor}
     <JsonEdit
       editingSlots={ok.editingSlots}
@@ -140,5 +139,8 @@
   }
   dialog {
     width: 80%;
+    border-radius: 9px;
+    border: 1px #1e1e1e solid;
+    background-color: #1e1e1e;
   }
 </style>

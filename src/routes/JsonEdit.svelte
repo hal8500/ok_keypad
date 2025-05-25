@@ -51,15 +51,40 @@
   }
 </script>
 
+<nav>
+  <span>ボタン設定</span>
+  <div>
+    <button onclick={() => onsave(editor.getValue())}>保存</button>
+    <button onclick={() => oncancel()}>キャンセル</button>
+  </div>
+</nav>
 <div class="container" bind:this={editorContainer}></div>
-<div>
-  <button onclick={() => onsave(editor.getValue())}>保存</button>
-  <button onclick={() => oncancel()}>キャンセル</button>
-</div>
+<div></div>
 
 <style>
   .container {
-    width: 90%;
+    width: 100%;
     height: calc(100vh - 180px);
+  }
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 3px 0 20px 0;
+  }
+  nav > span {
+    color: white;
+    font-size: larger;
+  }
+  nav button {
+    color: white;
+    background-color: #1e1e1e;
+    border: 3px #1e1e1e solid;
+  }
+
+  nav button:hover {
+    cursor: pointer;
+    background-color: #303030;
+    border: 3px #777 ridge;
   }
 </style>
