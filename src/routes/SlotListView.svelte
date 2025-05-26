@@ -3,12 +3,46 @@
   import SlotView from "./SlotView.svelte";
 
   let { slotlist }: { slotlist: SlotList } = $props();
+
+  let dtext = $state("");
+
+  function onDragOver(
+    e: DragEvent & {
+      currentTarget: EventTarget & HTMLSpanElement;
+    },
+  ) {
+    if (e.dataTransfer) {
+      const idx = parseInt(e.dataTransfer.getData("text/index"));
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+
+      const h = e.currentTarget.clientHeight;
+      const tidx = e.currentTarget.tabIndex;
+      dtext = `pos: ox=${e.offsetX}, oy=${e.offsetY}, ch=${h}, idx=${idx} tidx=${tidx}`;
+    }
+  }
 </script>
 
+<p>{dtext}</p>
 <ol>
   {#each slotlist as slot, i}
-    <li>
-      <span class="mark">Button {i + 1}</span>
+    <li
+      draggable="true"
+      ondragstart={(e) => {
+        if (e.dataTransfer) {
+          e.dataTransfer.setData("text/index", i.toString());
+          e.dataTransfer.setData("text/plain", JSON.stringify(slot));
+        }
+      }}
+    >
+      <span
+        class="mark"
+        role="row"
+        tabindex={i}
+        aria-dropeffect="move"
+        ondragenter={onDragOver}
+        ondragover={onDragOver}>Button {i + 1}</span
+      >
       <div class="slot_body"><SlotView {slot}></SlotView></div>
     </li>
   {/each}
