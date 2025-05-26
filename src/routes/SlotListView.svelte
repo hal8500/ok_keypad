@@ -5,44 +5,77 @@
   let { slotlist }: { slotlist: SlotList } = $props();
 
   let dtext = $state("");
+  let draggingIndex = 0;
 
-  function onDragOver(
+  function calcDropIndex(
+    source: number,
+    target: number,
     e: DragEvent & {
-      currentTarget: EventTarget & HTMLSpanElement;
+      currentTarget: EventTarget & HTMLLIElement;
     },
   ) {
-    if (e.dataTransfer) {
-      const idx = parseInt(e.dataTransfer.getData("text/index"));
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
+    // 自分自身にはドロップしない
+    if (source == target) return -1;
 
-      const h = e.currentTarget.clientHeight;
-      const tidx = e.currentTarget.tabIndex;
-      dtext = `pos: ox=${e.offsetX}, oy=${e.offsetY}, ch=${h}, idx=${idx} tidx=${tidx}`;
+    // 後ろに移動する場合は－１
+    if (source < target) {
+      target -= 1;
     }
+
+    const r = e.currentTarget.getBoundingClientRect();
+    const y = e.clientY - r.top;
+
+    // 要素の上半分なら手前に、下半分なら次に挿入する。
+    if (y > r.height / 2) {
+      target += 1;
+    }
+
+    if (source == target) return -1;
+    return target;
   }
 </script>
 
 <p>{dtext}</p>
 <ol>
   {#each slotlist as slot, i}
+    {@const drag = (
+      e: DragEvent & {
+        currentTarget: EventTarget & HTMLLIElement;
+      },
+    ) => {
+      if (e.dataTransfer) {
+        const tidx = calcDropIndex(draggingIndex, i, e);
+        if (tidx != -1) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+        }
+      }
+    }}
     <li
       draggable="true"
       ondragstart={(e) => {
         if (e.dataTransfer) {
-          e.dataTransfer.setData("text/index", i.toString());
+          e.dataTransfer.setData("index", i.toString());
+          draggingIndex = i;
           e.dataTransfer.setData("text/plain", JSON.stringify(slot));
         }
       }}
+      ondragenter={drag}
+      ondragover={drag}
+      ondrop={(e) => {
+        if (e.dataTransfer) {
+          const tidx = calcDropIndex(draggingIndex, i, e);
+          if (tidx != -1) {
+            e.preventDefault();
+            const m = slotlist.splice(draggingIndex, 1)[0];
+            slotlist.splice(tidx, 0, m);
+
+            e.dataTransfer.dropEffect = "move";
+          }
+        }
+      }}
     >
-      <span
-        class="mark"
-        role="row"
-        tabindex={i}
-        aria-dropeffect="move"
-        ondragenter={onDragOver}
-        ondragover={onDragOver}>Button {i + 1}</span
-      >
+      <span class="mark">Button {i + 1}</span>
       <div class="slot_body"><SlotView {slot}></SlotView></div>
     </li>
   {/each}
