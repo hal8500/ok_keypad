@@ -381,49 +381,134 @@ export function explainAction(action: Actions) {
 }
 
 export const SLOTS_DEFAULT: SlotList = [
+  {
+    "type": "hello world"
+  },
+  {
+    "button": "a"
+  },
+  {
+    "button": "TAB"
+  },
+  {
+    "name": "sample macro 2",
+    "description": "これは説明用のサンプルマクロです",
+    "actions": [
+      {
+        "press": "a"
+      },
+      {
+        "delay": 1000
+      },
+      {
+        "release": "ALL"
+      }
+    ]
+  },
   "1",
-  { type: "hello world" },
-  { button: "a" },
-  { button: "TAB" },
-  { name: "sample macro 1", actions: [{ type: "this is macro 1" }] },
   {
-    name: "sample macro 2",
-    description: "これは説明用のサンプルマクロです",
-    actions: [{ press: "a" }, { delay: 1000 }, { release: "ALL" }],
+    "name": "sample macro 1",
+    "actions": [
+      {
+        "type": "this is macro 1"
+      }
+    ]
   },
-
   {
-    name: "sample macro 3",
-    description:
-      "これは説明用のサンプルマクロです。長いタイプの説明文です。あああああ本日は晴天なり",
-    actions: [
-      { press: "a" },
-      { delay: 1000 },
-      { release: "ALL" },
-      { click: "LEFT" },
-      { move: { x: 10, y: 30 } },
-    ],
+    "name": "sample macro 3",
+    "description": "これは説明用のサンプルマクロです。長いタイプの説明文です。あああああ本日は晴天なり",
+    "actions": [
+      {
+        "press": "a"
+      },
+      {
+        "delay": 1000
+      },
+      {
+        "release": "ALL"
+      },
+      {
+        "click": "LEFT"
+      },
+      {
+        "move": {
+          "x": 10,
+          "y": 30
+        }
+      }
+    ]
   },
-
-  [{ press: "r" }, { delay: 1000 }, { release: "ALL" }, { type: "macro" }],
-
+  [
+    {
+      "press": "r"
+    },
+    {
+      "delay": 1000
+    },
+    {
+      "release": "ALL"
+    },
+    {
+      "type": "macro"
+    }
+  ],
   {
-    name: "chrome setup",
-    description: "chromeのセットアップ自動化マクロ",
-    actions: [
-      { tap: "TAB" },
-      { press: "DOWN_ARROW" },
-      { delay: 1500 },
-      { release: "DOWN_ARROW" },
-      { type: " " },
-      { delay: 500 },
-      { type: "ssid aaaa" },
-      { tap: "TAB" },
-      { tap: "p" },
-      { tap: "TAB" },
-      { type: "password" },
-    ],
-  },
+    "name": "chrome setup",
+    "description": "chromeのセットアップ自動化マクロ",
+    "actions": [
+      {
+        "tap": "TAB"
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "tap": "KP_ENTER"
+      },
+      {
+        "delay": 1500
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "press": "DOWN_ARROW"
+      },
+      {
+        "delay": 1500
+      },
+      {
+        "release": "DOWN_ARROW"
+      },
+      {
+        "type": " "
+      },
+      {
+        "delay": 500
+      },
+      {
+        "type": "ssid aaaa"
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "tap": "p"
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "type": "password"
+      }
+    ]
+  }
 ];
 
 export const KEY_TABLE = {
