@@ -2,118 +2,7 @@
 
 JSONVar loadDefaultItemsJson() {
   return JSON.parse(F(R"(
-[
-  "1",
-  {
-    "type": "hello world"
-  },
-  {
-    "button": "a"
-  },
-  {
-    "button": "TAB"
-  },
-  {
-    "name": "sample macro 1",
-    "actions": [
-      {
-        "type": "this is macro 1"
-      }
-    ]
-  },
-  {
-    "name": "sample macro 2",
-    "description": "これは説明用のサンプルマクロです",
-    "actions": [
-      {
-        "press": "a"
-      },
-      {
-        "delay": 1000
-      },
-      {
-        "release": "ALL"
-      }
-    ]
-  },
-  {
-    "name": "sample macro 3",
-    "description": "これは説明用のサンプルマクロです。長いタイプの説明文です。あああああ本日は晴天なり",
-    "actions": [
-      {
-        "press": "a"
-      },
-      {
-        "delay": 1000
-      },
-      {
-        "release": "ALL"
-      },
-      {
-        "click": "LEFT"
-      },
-      {
-        "move": {
-          "x": 10,
-          "y": 30
-        }
-      }
-    ]
-  },
-  [
-    {
-      "press": "r"
-    },
-    {
-      "delay": 1000
-    },
-    {
-      "release": "ALL"
-    },
-    {
-      "type": "macro"
-    }
-  ],
-  {
-    "name": "chrome setup",
-    "description": "chromeのセットアップ自動化マクロ",
-    "actions": [
-      {
-        "tap": "TAB"
-      },
-      {
-        "press": "DOWN_ARROW"
-      },
-      {
-        "delay": 1500
-      },
-      {
-        "release": "DOWN_ARROW"
-      },
-      {
-        "type": " "
-      },
-      {
-        "delay": 500
-      },
-      {
-        "type": "ssid aaaa"
-      },
-      {
-        "tap": "TAB"
-      },
-      {
-        "tap": "p"
-      },
-      {
-        "tap": "TAB"
-      },
-      {
-        "type": "password"
-      }
-    ]
-  }
-]
+["1","2","3","4","5","6","7","8","9",]
 )"));
 }
 
@@ -594,9 +483,9 @@ void SlotList::loadJson(JSONVar &json) {
   }
 }
 
-void SlotList::update() {
+bool SlotList::update() {
   // 実行中マクロがないなら終了
-  if (!executing_) return;
+  if (!executing_) return false;
 
   executing_ = false;
   for (size_t i = 0; i < size_; i++) {
@@ -607,6 +496,7 @@ void SlotList::update() {
       }
     }
   }
+  return true;
 }
 
 

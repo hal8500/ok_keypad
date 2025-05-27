@@ -357,7 +357,7 @@ public:
 
   void loadJson(JSONVar &json);
 
-  void update();
+  bool update();
   void onPress(size_t index);
   void onRelease(size_t index);
   void cancel();

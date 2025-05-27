@@ -14,8 +14,9 @@
 //   D         <------       GP26 | GP27  //
 //----------------------------------------//
 
+const char CANCEL_KEY = '*';
 
-#define V1
+#define V2
 
 #ifdef V1
 
@@ -28,6 +29,21 @@ const byte _KEY_B = 21;
 const byte _KEY_C = 22;
 const byte _KEY_D = 26;
 
+const byte _POWER_LED = 25;
+const byte _ACT_LED = 2;
+const byte _DRAIN_LED = 3;
+
+const byte ROWS = 4;  //four rows
+const byte COLS = 3;  //three columns
+
+const byte NUM_SLOTS = 9;
+const byte NUM_KEYS = ROWS * COLS;
+
+const char KEYS[NUM_KEYS] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '0', CANCEL_KEY};
+
+byte rowPins[ROWS] = { _KEY_D, _KEY_C, _KEY_B, _KEY_A };  //connect to the row pinouts of the keypad
+byte colPins[COLS] = { _KEY_X, _KEY_Y, _KEY_Z };          //connect to the column pinouts of the keypad
+
 #else
 
 // V2用ピンマップ
@@ -39,19 +55,23 @@ const byte _KEY_B = 25;
 const byte _KEY_C = 26;
 const byte _KEY_D = 27;
 
-#endif
-
-
-
+const byte _POWER_LED = 2;
+const byte _ACT_LED = 5;
+const byte _DRAIN_LED = 3;
 
 const byte ROWS = 4;  //four rows
 const byte COLS = 3;  //three columns
+
+const byte NUM_SLOTS = 9;
 const byte NUM_KEYS = ROWS * COLS;
-const char CANCEL_KEY = '*';
+
 const char KEYS[NUM_KEYS] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '0', CANCEL_KEY};
 
 byte rowPins[ROWS] = { _KEY_D, _KEY_C, _KEY_B, _KEY_A };  //connect to the row pinouts of the keypad
 byte colPins[COLS] = { _KEY_X, _KEY_Y, _KEY_Z };          //connect to the column pinouts of the keypad
+
+#endif
+
 
 
 #endif

@@ -9,11 +9,6 @@
 #include "js.h"
 #include "SerialReader.h"
 
-#define _POWER_LED 25
-#define _ACT_LED 2
-
-#define NUM_SLOTS 9
-
 const String FILE_PATH = "/j.json";
 
 Keypad keypad = Keypad(makeKeymap(KEYS), rowPins, colPins, ROWS, COLS);
@@ -27,13 +22,16 @@ void setup() {
   LittleFS.begin();
   Keyboard.begin(KeyboardLayout_ja_JP);
   Mouse.begin();
-  //okeypad_setup();
 
   pinMode(_POWER_LED, OUTPUT);
   digitalWrite(_POWER_LED, 1);
 
   pinMode(_ACT_LED, OUTPUT);
   digitalWrite(_ACT_LED, 0);
+
+  pinMode(_DRAIN_LED, OUTPUT);
+  digitalWrite(_DRAIN_LED, 0);
+  
   keypad.addEventListener(keypadEvent);
 
   load();
@@ -46,7 +44,12 @@ void loop() {
     Serial.println(key);
   }
 
-  slotList.update();
+  // マクロ実行中ならtrue ACTLEDを光らせる
+  if (slotList.update()) {
+    digitalWrite(_ACT_LED, 1);
+  } else {
+    digitalWrite(_ACT_LED, 0);
+  }
 
   if (sr.update()) {
     String line = sr.getLine();
