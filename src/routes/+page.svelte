@@ -19,6 +19,17 @@
 
   onMount(() => {
     ok.reloadPorts();
+
+    navigator.serial.addEventListener("connect", (e) => {
+      ok.reloadPorts();
+    });
+
+    navigator.serial.addEventListener("disconnect", async (e) => {
+      if (e.target == ok.currentPort) {
+        await ok.close();
+      }
+      await ok.reloadPorts();
+    });
   });
 
   onDestroy(() => {
@@ -35,6 +46,10 @@
   />
 </p>
 <hr />
+<div class="debuginfo">
+  <h2>デバッグ情報</h2>
+  <pre><code>{ok.message}</code></pre>
+</div>
 <div>
   <h2>シリアルポート設定</h2>
   <div>
@@ -115,11 +130,7 @@
   {/if}
 </dialog>
 
-<div class="debuginfo">
-  <h2>デバッグ情報</h2>
-  <pre><code>{ok.message}</code></pre>
-  <pre><code>{JSON.stringify(ok.editingSlots)}</code></pre>
-</div>
+
 
 <style>
   .container {
