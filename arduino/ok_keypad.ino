@@ -31,7 +31,7 @@ void setup() {
 
   pinMode(_DRAIN_LED, OUTPUT);
   digitalWrite(_DRAIN_LED, 0);
-  
+
   keypad.addEventListener(keypadEvent);
 
   load();
@@ -186,7 +186,11 @@ void init() {
 
 void load() {
   JSONVar json = loadFile();
-  slotList.loadJson(json);
+  if (JSON.typeof(json) == "array") {
+    slotList.loadJson(json);
+  } else {
+    init();
+  }
 }
 
 JSONVar loadFile() {
@@ -194,7 +198,7 @@ JSONVar loadFile() {
 
   if (!f || !f.available()) {
     Serial.println("failed to open file for reading");
-    return loadDefaultItemsJson();
+    return nullptr;
   }
 
   Serial.println("loading items");
