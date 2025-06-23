@@ -1,6 +1,59 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
+        "ButtonAssign": {
+            "additionalProperties": false,
+            "description": "ボタンを指定されたキーとして機能させます",
+            "properties": {
+                "button": {
+                    "description": "ボタンを指定されたキーとして機能させます",
+                    "maxLength": 1,
+                    "minLength": 1,
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "button"
+            ],
+            "type": "object"
+        },
+        "ButtonIdAssign": {
+            "additionalProperties": false,
+            "description": "ボタンを指定されたキーとして機能させます",
+            "properties": {
+                "button": {
+                    "$ref": "#/definitions/KeyIds",
+                    "description": "ボタンを指定されたキーとして機能させます"
+                },
+                "comment": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "button"
+            ],
+            "type": "object"
+        },
+        "DelayAction": {
+            "additionalProperties": false,
+            "description": "指定されたミリ秒だけ、動作を停止します",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "delay": {
+                    "description": "指定されたミリ秒だけ、動作を停止します",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "delay"
+            ],
+            "type": "object"
+        },
         "KeyIds": {
             "enum": [
                 "BACKSPACE",
@@ -77,183 +130,48 @@
         "MacroActions": {
             "anyOf": [
                 {
-                    "additionalProperties": false,
-                    "description": "一連の文字列をタイプします",
-                    "properties": {
-                        "type": {
-                            "description": "一連の文字列をタイプします",
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "type"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/TypeAction",
+                    "description": "一連の文字列をタイプします"
                 },
                 {
-                    "additionalProperties": false,
-                    "description": "指定されたキーを押して離します",
-                    "properties": {
-                        "tap": {
-                            "description": "指定されたキーを押して離します",
-                            "maxLength": 1,
-                            "minLength": 1,
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "tap"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/TapAction",
+                    "description": "指定されたキーを押して離します"
                 },
                 {
-                    "additionalProperties": false,
-                    "description": "指定されたキーを押して離します",
-                    "properties": {
-                        "tap": {
-                            "$ref": "#/definitions/KeyIds",
-                            "description": "指定されたキーを押して離します"
-                        }
-                    },
-                    "required": [
-                        "tap"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/TapIdAction",
+                    "description": "指定されたキーを押して離します"
                 },
                 {
-                    "additionalProperties": false,
-                    "description": "指定されたキーを押します",
-                    "properties": {
-                        "press": {
-                            "description": "指定されたキーを押します",
-                            "maxLength": 1,
-                            "minLength": 1,
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "press"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/PressAction",
+                    "description": "指定されたキーを押します"
                 },
                 {
-                    "additionalProperties": false,
-                    "description": "指定されたキーを押します",
-                    "properties": {
-                        "press": {
-                            "$ref": "#/definitions/KeyIds",
-                            "description": "指定されたキーを押します"
-                        }
-                    },
-                    "required": [
-                        "press"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/PressIdAction",
+                    "description": "指定されたキーを押します"
                 },
                 {
-                    "additionalProperties": false,
-                    "description": "指定されたキーを離します",
-                    "properties": {
-                        "release": {
-                            "description": "指定されたキーを離します",
-                            "maxLength": 1,
-                            "minLength": 1,
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "release"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/ReleaseAction",
+                    "description": "指定されたキーを離します"
                 },
                 {
-                    "additionalProperties": false,
-                    "description": "指定されたキーを離します",
-                    "properties": {
-                        "release": {
-                            "$ref": "#/definitions/KeyIds",
-                            "description": "指定されたキーを離します"
-                        }
-                    },
-                    "required": [
-                        "release"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/ReleaseIdAction",
+                    "description": "指定されたキーを離します"
                 },
                 {
-                    "additionalProperties": false,
-                    "description": "指定されたキーを離します",
-                    "properties": {
-                        "release": {
-                            "const": "ALL",
-                            "description": "指定されたキーを離します",
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "release"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/ReleaseAllAction",
+                    "description": "指定されたキーを離します"
                 },
                 {
-                    "additionalProperties": false,
-                    "description": "指定されたミリ秒だけ、動作を停止します",
-                    "properties": {
-                        "delay": {
-                            "description": "指定されたミリ秒だけ、動作を停止します",
-                            "type": "number"
-                        }
-                    },
-                    "required": [
-                        "delay"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/DelayAction",
+                    "description": "指定されたミリ秒だけ、動作を停止します"
                 },
                 {
-                    "additionalProperties": false,
-                    "description": "マウスの指定されたボタンをクリックします",
-                    "properties": {
-                        "click": {
-                            "description": "マウスの指定されたボタンをクリックします",
-                            "enum": [
-                                "LEFT",
-                                "MIDDLE",
-                                "RIGHT"
-                            ],
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "click"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/MouseClickAction",
+                    "description": "マウスの指定されたボタンをクリックします"
                 },
                 {
-                    "additionalProperties": false,
-                    "description": "マウスを指定された量だけ移動します",
-                    "properties": {
-                        "move": {
-                            "additionalProperties": false,
-                            "description": "マウスを指定された量だけ移動します",
-                            "properties": {
-                                "x": {
-                                    "type": "number"
-                                },
-                                "y": {
-                                    "type": "number"
-                                }
-                            },
-                            "required": [
-                                "x",
-                                "y"
-                            ],
-                            "type": "object"
-                        }
-                    },
-                    "required": [
-                        "move"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/MouseMoveAction",
+                    "description": "マウスを指定された量だけ移動します"
                 },
                 {
                     "type": [
@@ -263,70 +181,168 @@
                 }
             ]
         },
+        "MouseButtonIds": {
+            "enum": [
+                "LEFT",
+                "MIDDLE",
+                "RIGHT"
+            ],
+            "type": "string"
+        },
+        "MouseClickAction": {
+            "additionalProperties": false,
+            "description": "マウスの指定されたボタンをクリックします",
+            "properties": {
+                "click": {
+                    "$ref": "#/definitions/MouseButtonIds",
+                    "description": "マウスの指定されたボタンをクリックします"
+                },
+                "comment": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "click"
+            ],
+            "type": "object"
+        },
+        "MouseMoveAction": {
+            "additionalProperties": false,
+            "description": "マウスを指定された量だけ移動します",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "move": {
+                    "additionalProperties": false,
+                    "description": "マウスを指定された量だけ移動します",
+                    "properties": {
+                        "x": {
+                            "type": "number"
+                        },
+                        "y": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "x",
+                        "y"
+                    ],
+                    "type": "object"
+                }
+            },
+            "required": [
+                "move"
+            ],
+            "type": "object"
+        },
+        "PressAction": {
+            "additionalProperties": false,
+            "description": "指定されたキーを押します",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "press": {
+                    "description": "指定されたキーを押します",
+                    "maxLength": 1,
+                    "minLength": 1,
+                    "type": "string"
+                }
+            },
+            "required": [
+                "press"
+            ],
+            "type": "object"
+        },
+        "PressIdAction": {
+            "additionalProperties": false,
+            "description": "指定されたキーを押します",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "press": {
+                    "$ref": "#/definitions/KeyIds",
+                    "description": "指定されたキーを押します"
+                }
+            },
+            "required": [
+                "press"
+            ],
+            "type": "object"
+        },
+        "ReleaseAction": {
+            "additionalProperties": false,
+            "description": "指定されたキーを離します",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "release": {
+                    "description": "指定されたキーを離します",
+                    "maxLength": 1,
+                    "minLength": 1,
+                    "type": "string"
+                }
+            },
+            "required": [
+                "release"
+            ],
+            "type": "object"
+        },
+        "ReleaseAllAction": {
+            "additionalProperties": false,
+            "description": "指定されたキーを離します",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "release": {
+                    "const": "ALL",
+                    "description": "指定されたキーを離します",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "release"
+            ],
+            "type": "object"
+        },
+        "ReleaseIdAction": {
+            "additionalProperties": false,
+            "description": "指定されたキーを離します",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "release": {
+                    "$ref": "#/definitions/KeyIds",
+                    "description": "指定されたキーを離します"
+                }
+            },
+            "required": [
+                "release"
+            ],
+            "type": "object"
+        },
         "SlotCommand": {
             "anyOf": [
                 {
-                    "additionalProperties": false,
-                    "description": "一連の文字列をタイプします",
-                    "properties": {
-                        "type": {
-                            "description": "一連の文字列をタイプします",
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "type"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/TypeAction",
+                    "description": "一連の文字列をタイプします"
                 },
                 {
-                    "additionalProperties": false,
-                    "description": "マウスの指定されたボタンをクリックします",
-                    "properties": {
-                        "click": {
-                            "description": "マウスの指定されたボタンをクリックします",
-                            "enum": [
-                                "LEFT",
-                                "MIDDLE",
-                                "RIGHT"
-                            ],
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "click"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/MouseClickAction",
+                    "description": "マウスの指定されたボタンをクリックします"
                 },
                 {
-                    "additionalProperties": false,
-                    "description": "ボタンを指定されたキーとして機能させます",
-                    "properties": {
-                        "button": {
-                            "description": "ボタンを指定されたキーとして機能させます",
-                            "maxLength": 1,
-                            "minLength": 1,
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "button"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/ButtonAssign",
+                    "description": "ボタンを指定されたキーとして機能させます"
                 },
                 {
-                    "additionalProperties": false,
-                    "description": "ボタンを指定されたキーとして機能させます",
-                    "properties": {
-                        "button": {
-                            "$ref": "#/definitions/KeyIds",
-                            "description": "ボタンを指定されたキーとして機能させます"
-                        }
-                    },
-                    "required": [
-                        "button"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/ButtonIdAssign",
+                    "description": "ボタンを指定されたキーとして機能させます"
                 },
                 {
                     "additionalProperties": false,
@@ -363,6 +379,59 @@
                     "type": "string"
                 }
             ]
+        },
+        "TapAction": {
+            "additionalProperties": false,
+            "description": "指定されたキーを押して離します",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "tap": {
+                    "description": "指定されたキーを押して離します",
+                    "maxLength": 1,
+                    "minLength": 1,
+                    "type": "string"
+                }
+            },
+            "required": [
+                "tap"
+            ],
+            "type": "object"
+        },
+        "TapIdAction": {
+            "additionalProperties": false,
+            "description": "指定されたキーを押して離します",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "tap": {
+                    "$ref": "#/definitions/KeyIds",
+                    "description": "指定されたキーを押して離します"
+                }
+            },
+            "required": [
+                "tap"
+            ],
+            "type": "object"
+        },
+        "TypeAction": {
+            "additionalProperties": false,
+            "description": "一連の文字列をタイプします",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "type": {
+                    "description": "一連の文字列をタイプします",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "type": "object"
         }
     },
     "items": {

@@ -76,6 +76,10 @@ export type MouseButtonIds = "LEFT" | "RIGHT" | "MIDDLE";
  */
 export type Char = string;
 
+export type Commentable = {
+  comment?: string;
+}
+
 /**
  * 一連の文字列をタイプします
  */
@@ -84,7 +88,7 @@ export type TypeAction = {
    * 一連の文字列をタイプします
    */
   type: string;
-};
+} & Commentable;
 
 /**
  * 指定されたキーを押して離します
@@ -94,7 +98,7 @@ export type TapAction = {
    * 指定されたキーを押して離します
    */
   tap: Char;
-};
+} & Commentable;
 
 /**
  * 指定されたキーを押して離します
@@ -104,7 +108,7 @@ export type TapIdAction = {
    * 指定されたキーを押して離します
    */
   tap: KeyIds;
-};
+} & Commentable;
 
 /**
  * 指定されたキーを押します
@@ -114,7 +118,7 @@ export type PressAction = {
    * 指定されたキーを押します
    */
   press: Char;
-};
+} & Commentable;
 
 /**
  * 指定されたキーを押します
@@ -124,7 +128,7 @@ export type PressIdAction = {
    * 指定されたキーを押します
    */
   press: KeyIds;
-};
+} & Commentable;
 
 /**
  * 指定されたキーを離します
@@ -134,7 +138,7 @@ export type ReleaseAction = {
    * 指定されたキーを離します
    */
   release: Char;
-};
+} & Commentable;
 
 /**
  * 指定されたキーを離します
@@ -144,7 +148,7 @@ export type ReleaseIdAction = {
    * 指定されたキーを離します
    */
   release: KeyIds;
-};
+} & Commentable;
 
 /**
  * 指定されたキーを離します
@@ -154,7 +158,7 @@ export type ReleaseAllAction = {
    * 指定されたキーを離します
    */
   release: "ALL";
-};
+} & Commentable;
 
 /**
  * 指定されたミリ秒だけ、動作を停止します
@@ -164,7 +168,7 @@ export type DelayAction = {
    * 指定されたミリ秒だけ、動作を停止します
    */
   delay: number;
-};
+} & Commentable;
 
 /**
  * マウスの指定されたボタンをクリックします
@@ -174,7 +178,7 @@ export type MouseClickAction = {
    * マウスの指定されたボタンをクリックします
    */
   click: MouseButtonIds;
-};
+} & Commentable;
 
 /**
  * マウスを指定された量だけ移動します
@@ -184,7 +188,7 @@ export type MouseMoveAction = {
    * マウスを指定された量だけ移動します
    */
   move: { x: number; y: number };
-};
+} & Commentable;
 
 /**
  * ボタンを指定されたキーとして機能させます
@@ -194,7 +198,7 @@ export type ButtonAssign = {
    * ボタンを指定されたキーとして機能させます
    */
   button: Char;
-};
+} & Commentable;
 
 /**
  * ボタンを指定されたキーとして機能させます
@@ -204,7 +208,7 @@ export type ButtonIdAssign = {
    * ボタンを指定されたキーとして機能させます
    */
   button: KeyIds;
-};
+} & Commentable;
 
 /**
  * ボタンを指定されたキーとして機能させます
@@ -214,7 +218,7 @@ export type ButtonMouseAssign = {
    * ボタンを指定されたキーとして機能させます
    */
   button: MouseButtonIds;
-};
+} & Commentable;
 
 
 export type SingleActions =
@@ -405,74 +409,151 @@ export const SLOTS_DEFAULT: SlotList = [
       }
     ]
   },
-  "1",
   {
-    "name": "sample macro 1",
+    "name": "PDFリーダーのインストール",
     "actions": [
       {
-        "type": "this is macro 1"
-      }
-    ]
-  },
-  {
-    "name": "sample macro 3",
-    "description": "これは説明用のサンプルマクロです。長いタイプの説明文です。あああああ本日は晴天なり",
-    "actions": [
-      {
-        "press": "a"
+        "press": "LEFT_GUI"
       },
       {
-        "delay": 1000
+        "press": "r"
       },
       {
         "release": "ALL"
       },
       {
-        "click": "LEFT"
+        "delay": 500
       },
       {
-        "move": {
-          "x": 10,
-          "y": 30
-        }
+        "type": "cmd\n"
+      },
+      {
+        "delay": 2000
+      },
+      {
+        "type": "winget install adobe.acrobat.reader.64-bit\n"
       }
     ]
   },
-  [
-    {
-      "press": "r"
-    },
-    {
-      "delay": 1000
-    },
-    {
-      "release": "ALL"
-    },
-    {
-      "type": "macro"
-    }
-  ],
+  {
+    "name": "Windows ドメイン参加",
+    "actions": [
+      {
+        "press": "LEFT_GUI"
+      },
+      {
+        "press": "r"
+      },
+      {
+        "release": "ALL"
+      },
+      {
+        "delay": 1000
+      },
+      {
+        "type": "sysdm.cpl\n"
+      },
+      {
+        "delay": 1500
+      },
+      {
+        "press": "LEFT_ALT"
+      },
+      {
+        "press": "c"
+      },
+      {
+        "release": "ALL"
+      },
+      {
+        "delay": 500
+      },
+      {
+        "press": "LEFT_ALT"
+      },
+      {
+        "press": "d"
+      },
+      {
+        "release": "ALL"
+      },
+      {
+        "delay": 500
+      },
+      {
+        "tap": " "
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "type": "aaaaa.local\n"
+      }
+    ]
+  },
+  {
+    "name": "chrome setup: logon",
+    "description": "chromeのログオンの自動化",
+    "actions": [
+      {
+        "type": "test@example.com"
+      },
+      {
+        "tap": "RETURN"
+      },
+      {
+        "delay": 3000
+      },
+      {
+        "type": "password"
+      },
+    ]
+  },
+  {
+    "name": "chrome setup: input ssid",
+    "description": "chromeの自動セットアップの無線接続部分",
+    "actions": [
+      {
+        "type": "test_ssid"
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "tap": "p"
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "type": "password"
+      },
+      {
+        "tap": "RETURN"
+      },
+      {
+        "delay": 5000
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "tap": "RETURN"
+      },
+    ]
+  },
   {
     "name": "chrome setup",
     "description": "chromeのセットアップ自動化マクロ",
     "actions": [
       {
-        "tap": "TAB"
+        "tap": "ESC"
       },
       {
-        "tap": "TAB"
+        "tap": "RETURN"
       },
       {
-        "tap": "TAB"
-      },
-      {
-        "tap": "TAB"
-      },
-      {
-        "tap": "KP_ENTER"
-      },
-      {
-        "delay": 1500
+        "delay": 3000
       },
       {
         "tap": "TAB"
@@ -487,13 +568,13 @@ export const SLOTS_DEFAULT: SlotList = [
         "release": "DOWN_ARROW"
       },
       {
-        "type": " "
+        "tap": "RETURN"
       },
       {
         "delay": 500
       },
       {
-        "type": "ssid aaaa"
+        "type": "test_ssid"
       },
       {
         "tap": "TAB"
@@ -506,6 +587,61 @@ export const SLOTS_DEFAULT: SlotList = [
       },
       {
         "type": "password"
+      },
+      {
+        "tap": "RETURN"
+      },
+      {
+        "delay": 5000
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "tap": "RETURN"
+      },
+      {
+        "delay": 15000
+      },
+      {
+        "comment": "Chromebook の設定の選択",
+        "tap": "TAB"
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "tap": "RETURN"
+      },
+      {
+        "delay": 3000
+      },
+      {
+        "tap": "ESC"
+      },
+      {
+        "type": "test@example.com"
+      },
+      {
+        "tap": "RETURN"
+      },
+      {
+        "delay": 3000
+      },
+      {
+        "type": "password"
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "tap": "TAB"
+      },
+      {
+        "tap": "TAB"
       }
     ]
   }
