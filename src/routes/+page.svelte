@@ -71,38 +71,34 @@
 </div>
 
 <hr />
+<div class="menu">
+  <button disabled={ok.slots == null} onclick={() => ok.loadSlotsToEditing()}
+    >▶ 機器の設定を取り込む</button
+  >
+  <button disabled={ok.slots == null} onclick={() => ok.saveSlotsFromEditing()}
+    >◀ 設定を機器に書き込む</button
+  >
+  <button
+    onclick={() => {
+      dialog.showModal();
+      showEditor = true;
+    }}
+  >
+    JSON編集
+  </button>
+</div>
 <div class="container">
   <div class="item">
     <h2>現在のボタン設定</h2>
     {#if ok.slots}
-      <SlotListView slotlist={ok.slots} />
+      <SlotListView slotlist={ok.slots} draggable={false} />
     {:else}
       <p>未接続</p>
     {/if}
   </div>
   <div class="item">
     <h2>編集中の設定</h2>
-
-    <SlotListView slotlist={ok.editingSlots} />
-    <div>
-      <button
-        disabled={ok.slots == null}
-        onclick={() => ok.loadSlotsToEditing()}>▶ 機器の設定を取り込む</button
-      >
-      <button
-        disabled={ok.slots == null}
-        onclick={() => ok.saveSlotsFromEditing()}
-        >◀ 設定を機器に書き込む</button
-      >
-      <button
-        onclick={() => {
-          dialog.showModal();
-          showEditor = true;
-        }}
-      >
-        JSON編集
-      </button>
-    </div>
+    <SlotListView slotlist={ok.editingSlots} draggable={true} />
   </div>
 </div>
 
@@ -130,12 +126,14 @@
   {/if}
 </dialog>
 
-
-
 <style>
   .container {
     display: flex;
     flex-wrap: wrap;
+  }
+  .menu {
+    margin: 1px;
+    padding: 5px;
   }
   .item {
     flex-grow: 1;
