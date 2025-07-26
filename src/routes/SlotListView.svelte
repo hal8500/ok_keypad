@@ -2,7 +2,7 @@
   import type { SlotList } from "$lib/types";
   import SlotView from "./SlotView.svelte";
 
-  let { slotlist }: { slotlist: SlotList } = $props();
+  let { slotlist, draggable }: { slotlist: SlotList, draggable: boolean } = $props();
 
   let dtext = $state("");
   let draggingIndex = 0;
@@ -52,7 +52,7 @@
       }
     }}
     <li
-      draggable="true"
+      draggable={draggable}
       ondragstart={(e) => {
         if (e.dataTransfer) {
           e.dataTransfer.setData("index", i.toString());
