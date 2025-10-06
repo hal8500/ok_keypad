@@ -53,6 +53,7 @@ void loop() {
 void handleCommand(String &command) {
   Serial.print("command > ");
   Serial.println(command);
+  slotList.cancel();
 
   if (command.startsWith("set ")) {
     set(command);
