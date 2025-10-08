@@ -41,21 +41,32 @@ void setup() {
   slotList.onPress(0);
 }
 
-uint32_t getLedColor() {
+uint32_t getLEDColor() {
   const double duration = 40.0;
   double phase = millis() / duration / 1000.0 + 0.3;
   phase = phase - floor(phase);
   return pixels.ColorHSV(int16_t(phase * 65535.0), 255, 4);
 }
 
+uint32_t prevColor = 0;
+
+void updateLED(bool executing) {
+  uint32_t color = 0;
+  if (executing) {
+    color = getLEDColor();
+  }
+  if (prevColor != color) {
+    pixels.setPixelColor(0, color);
+    pixels.show();
+    prevColor = color;
+  }
+}
+
 void loop() {
 
-  if (slotList.update()) {
-    pixels.setPixelColor(0, getLedColor());
-  } else {
-    pixels.clear();
-  }
-  pixels.show();
+  bool executing = slotList.update();
+  updateLED(executing);
+
 
   if (sr.update()) {
     String line = sr.getLine();
