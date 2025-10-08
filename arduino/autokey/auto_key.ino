@@ -3,6 +3,7 @@
 #include "KeyboardPico.h"
 #include <Arduino_JSON.h>
 #include <LittleFS.h>
+#include <Adafruit_NeoPixel.h>
 
 #include "keydefs.h"
 #include "js.h"
@@ -10,9 +11,13 @@
 
 const String FILE_PATH = "/j.json";
 
+const int NEO_PIX_PIN = 16;
+
 SerialReader sr;
 
 SlotList slotList(NUM_SLOTS);
+
+Adafruit_NeoPixel pixels(1, NEO_PIX_PIN);
 
 void setup() {
   Serial.setTimeout(20);
@@ -20,6 +25,7 @@ void setup() {
   LittleFS.begin();
   Keyboard.begin(KeyboardLayout_ja_JP);
   Mouse.begin();
+  pixels.begin();
 
   pinMode(_POWER_LED, OUTPUT);
   digitalWrite(_POWER_LED, 1);
@@ -35,14 +41,21 @@ void setup() {
   slotList.onPress(0);
 }
 
+uint32_t getLedColor() {
+  const double duration = 40.0;
+  double phase = millis() / duration / 1000.0 + 0.3;
+  phase = phase - floor(phase);
+  return pixels.ColorHSV(int16_t(phase * 65535.0), 255, 4);
+}
+
 void loop() {
 
-  // マクロ実行中ならtrue ACTLEDを光らせる
   if (slotList.update()) {
-    digitalWrite(_ACT_LED, 1);
+    pixels.setPixelColor(0, getLedColor());
   } else {
-    digitalWrite(_ACT_LED, 0);
+    pixels.clear();
   }
+  pixels.show();
 
   if (sr.update()) {
     String line = sr.getLine();
