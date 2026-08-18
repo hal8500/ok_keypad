@@ -1,12 +1,9 @@
 import {
   isSlotList,
   SLOTS_DEFAULT,
-  type MacroActions,
-  type Char,
-  type KeyIds,
-  type SlotCommand,
   type SlotList,
 } from "./types";
+
 class LineBreakTransformer implements Transformer<string, string> {
   chunks: string;
 
@@ -178,7 +175,7 @@ export class OkSerial {
       const v = JSON.parse(value);
       this.editingSlots = v;
       this.edited = this.isDirty();
-    } catch {}
+    } catch { }
   }
 
   isDirty() {
